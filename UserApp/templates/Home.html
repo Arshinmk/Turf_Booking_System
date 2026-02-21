@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Turfo</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+<body>
+
+<!-- TOP NAV -->
+<header class="top-nav">
+    <div class="nav-container">
+        <div class="left">
+            <h2 class="logo">Turfo</h2>
+            <input type="text" placeholder="Search for Turfs, Sports or Locations">
+        </div>
+
+        <div class="right">
+            <select>
+                <option>Bangalore</option>
+                <option>Chennai</option>
+                <option>Hyderabad</option>
+            </select>
+            {% if request.session.username %}
+            <div class="dropdown">
+                <button class="signin" onclick="toggleDropdown()">{{request.session.username}} ▼</button>
+
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{% url 'user_logout' %}">Logout</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="{% url 'user_signup' %}"><button class="signin">login</button></a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- CATEGORY NAV -->
+<nav class="category-nav">
+    <div class="nav-container">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="{% url 'all_turf' %}">Turfs</a>
+        <a href="#">Contact</a>
+        <a href="#">Help</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="banner">
+    <div class="banner-container">
+        <h1>PLAY. BOOK. REPEAT.</h1>
+        <p>Premium Sports Turfs Near You</p>
+        <button>Explore Turfs</button>
+    </div>
+</section>
+
+<!-- SPORTS -->
+<section class="section">
+    <div class="section-header">
+        <h2>Sports Categories</h2>
+        <a href="#">See All</a>
+    </div>
+
+    <div class="card-row">
+        {% for i in cat %}
+        <div class="sport-card">
+            <img src="{{i.Sport_img1.url}}">
+            <h3>{{i.Sport_name}}</h3>
+            <a href="#">View Turf</a>
+        </div>
+
+        {% endfor %}
+    </div>
+</section>
+
+<!-- TURFS -->
+<section class="section">
+    <div class="section-header">
+        <h2>Recommended Turfs</h2>
+        <a href="#">See All</a>
+    </div>
+
+    <div class="card-row">
+        <div class="turf-card">
+            <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d">
+            <h3>Elite Football Arena</h3>
+            <p>📍 Bangalore</p>
+            <span>₹1500 / hr</span>
+        </div>
+
+        <div class="turf-card">
+            <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2">
+            <h3>GreenPlay Turf</h3>
+            <p>📍 Chennai</p>
+            <span>₹1200 / hr</span>
+        </div>
+
+        <div class="turf-card">
+            <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1">
+            <h3>Urban Sports Hub</h3>
+            <p>📍 Hyderabad</p>
+            <span>₹1000 / hr</span>
+        </div>
+
+        <div class="turf-card">
+            <img src="https://images.unsplash.com/photo-1551958219-acbc608c6377">
+            <h3>Pro Box Cricket</h3>
+            <p>📍 Mumbai</p>
+            <span>₹900 / hr</span>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <h3>Turfo</h3>
+            <p>India’s smartest way to book premium sports turfs.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Sports</h4>
+            <a href="#">Football</a>
+            <a href="#">Cricket</a>
+            <a href="#">Badminton</a>
+            <a href="#">Box Cricket</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#">About</a>
+            <a href="#">Careers</a>
+            <a href="#">Partner</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 TurfBook
+    </div>
+</footer>
+
+
+<style>
+/* SPORT CARD */
+.sport-card {
+    width: 240px;
+    height: 380px;
+    flex: 0 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s ease;
+}
+
+/* Hover effect */
+.sport-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+}
+
+/* Image */
+.sport-card img {
+    width: 100%;
+    height: 65%;
+    object-fit: cover;
+}
+
+/* Center sport name */
+.sport-card h3 {
+    text-align: center;
+    padding: 15px 10px;
+}
+
+/* View Turf button */
+.sport-card a {
+    margin: auto 15px 15px 15px;
+    padding: 10px;
+    text-align: center;
+    background: #e11d48;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.sport-card a:hover {
+    background: #be123c;
+}
+
+</style>
+
+<script>
+    function toggleDropdown() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    // Optional: Close dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.signin')) {
+            const dropdown = document.getElementById("dropdownMenu");
+            if (dropdown && dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+            }
+        }
+    }
+</script>
+
+
+
+</body>
+</html>

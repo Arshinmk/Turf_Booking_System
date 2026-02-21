@@ -1,0 +1,108 @@
+/* HERO DETAIL SECTION */
+.detail-hero {
+    position: relative;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+}
+
+/* Background */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to right, rgba(0,0,0,0.9) 30%, rgba(0,0,0,0.6)),
+        url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d")
+        center/cover no-repeat;
+    filter: blur(2px);
+    transform: scale(1.05);
+}
+
+/* Content */
+.hero-content {
+    position: relative;
+    max-width: 1300px;
+    margin: auto;
+    padding: 40px;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+/* Poster */
+.hero-poster img {
+    width: 260px;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.release-tag {
+    margin-top: 10px;
+    background: black;
+    padding: 8px;
+    text-align: center;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Details */
+.hero-details h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+/* Interest Box */
+.interest-box {
+    background: rgba(0,0,0,0.8);
+    border: 1px solid #444;
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.interest-btn {
+    background: #333;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Meta Info */
+.hero-meta {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #ddd;
+}
+
+/* Tags */
+.hero-tags span {
+    display: inline-block;
+    background: #374151;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+/* Book Button */
+.book-btn {
+    margin-top: 25px;
+    padding: 14px 40px;
+    font-size: 18px;
+    background: #e11d48;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.book-btn:hover {
+    background: #be123c;
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% extends 'Dashboard.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <section class="form-section">
+      <h2>Edit User</h2>
+      <p class="subtitle">Enter sport details and upload images</p>
+
+  <form class="sport-form" method="post" action="{% url 'update_user' ur_id=obj.id %}">
+    {% csrf_token %}
+    <!-- Sport Name -->
+    <div class="form-group">
+      <label>Username</label>
+      <input
+        type="text"
+        name="username"
+        value="{{obj.username}}"
+        required
+      />
+    </div>
+
+
+      <div class="form-group">
+    <label>Role</label>
+    <select name="role" required>
+        <option value="">{{obj.role}}</option>
+        <option>admin</option>
+        <option>owner</option>
+        <option>user</option>
+    </select>
+    </div>
+
+      <div class="form-group">
+      <label>Number</label>
+      <input
+        type="text"
+        name="number"
+        value="{{obj.phone_number}}"
+        required
+      />
+      </div>
+
+      <div class="form-group">
+      <label>Password</label>
+      <input
+        type="text"
+        name="password"
+        value="{{obj.password}}"
+        required
+      />
+      </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn">Edit User</button>
+  </form>
+</section>
+
+    <style>
+        /* Select Styling (Match Input Design) */
+select {
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid #d1fae5;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.25s ease;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Focus Effect */
+select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+    </style>
+</body>
+</html>
+{% endblock %}

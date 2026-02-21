@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="{% static 'dash/css/style.css' %}">
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2 class="logo">MyDash</h2>
+
+      <nav>
+        <ul class="menu">
+          <a href="{% url 'dashboard' %}" ><li class="menu-item active">Dashboard</li></a>
+
+          <!-- Dropdown -->
+          <li class="menu-item has-dropdown">
+            <div class="dropdown-toggle">
+              Login Details
+              <span class="arrow">▾</span>
+            </div>
+            <ul class="dropdown">
+              <a href="{% url 'user_details' %}"><li>User Details</li></a>
+            </ul>
+          </li>
+
+          <li class="menu-item has-dropdown">
+            <div class="dropdown-toggle">
+              Category
+              <span class="arrow">▾</span>
+            </div>
+            <ul class="dropdown">
+              <a href="{% url 'add_category' %}"><li>Add Category</li></a>
+              <a href="{% url 'category_details' %}"><li>Category Details</li></a>
+            </ul>
+          </li>
+
+          <li class="menu-item has-dropdown">
+            <div class="dropdown-toggle">
+              City
+              <span class="arrow">▾</span>
+            </div>
+            <ul class="dropdown">
+              <a href="{% url 'add_city' %}"><li>Add City</li></a>
+              <a href="{% url 'city_details' %}"><li>City Details</li></a>
+            </ul>
+          </li>
+
+          <li class="menu-item">Notifications</li>
+          <li class="menu-item">Support</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+<header class="header">
+  <h1>Dashboard</h1>
+
+  <div class="header-actions">
+
+    <!-- Left Button -->
+    <a href="{% url 'home' %}" class="btn btn-soft">Project</a>
+
+    <!-- New Project Dropdown -->
+    <div class="btn-dropdown">
+      <button class="btn dropdown-btn">
+        + New Project <span class="arrow">▾</span>
+      </button>
+
+      <div class="btn-dropdown-menu">
+        <a href="#">New Report</a>
+        <a href="#">New Category</a>
+        <a href="#">New User</a>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+      {% block content %}
+      <!-- Cards -->
+      <section class="cards">
+        <div class="card">
+          <h3>Users</h3>
+          <p>1,245</p>
+        </div>
+        <div class="card">
+          <h3>Revenue</h3>
+          <p>$18,390</p>
+        </div>
+        <div class="card">
+          <h3>Orders</h3>
+          <p>320</p>
+        </div>
+      </section>
+
+      <!-- Table -->
+      <section class="table-section">
+        <h2>Recent Activity</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Action</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alice</td>
+              <td>Created report</td>
+              <td>Feb 1, 2026</td>
+            </tr>
+            <tr>
+              <td>Bob</td>
+              <td>Updated settings</td>
+              <td>Jan 30, 2026</td>
+            </tr>
+            <tr>
+              <td>Charlie</td>
+              <td>Viewed analytics</td>
+              <td>Jan 29, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+  </div>
+  {% endblock %}
+
+  <!-- Dropdown JS -->
+  <script>
+    document.querySelectorAll(".dropdown-toggle").forEach(toggle => {
+      toggle.addEventListener("click", () => {
+        toggle.parentElement.classList.toggle("open");
+      });
+    });
+
+    document.querySelectorAll(".dropdown-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.parentElement.classList.toggle("open");
+    });
+  });
+  </script>
+
+</body>
+
+<style>
+  /* Header Right Buttons */
+.header-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+/* Soft Secondary Button */
+.btn-soft {
+  background: linear-gradient(135deg, #e0f2fe, #ccfbf1);
+  color: #022c22;
+  box-shadow: 0 10px 30px rgba(16,185,129,0.25);
+}
+
+/* Dropdown Wrapper */
+.btn-dropdown {
+  position: relative;
+}
+
+/* Dropdown Menu Glass Style */
+.btn-dropdown-menu {
+  position: absolute;
+  top: 115%;
+  right: 0;
+  min-width: 200px;
+
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(16px);
+
+  border-radius: 18px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+
+  overflow: hidden;
+  display: none;
+}
+
+/* Dropdown Items */
+.btn-dropdown-menu a {
+  display: block;
+  padding: 14px 18px;
+  text-decoration: none;
+  font-weight: 500;
+  color: #022c22;
+  transition: all 0.25s ease;
+}
+
+.btn-dropdown-menu a:hover {
+  background: linear-gradient(135deg, #ccfbf1, #ecfeff);
+}
+
+/* Open State */
+.btn-dropdown.open .btn-dropdown-menu {
+  display: block;
+}
+.btn-dropdown {
+  position: relative;
+  z-index: 1000; /* ensures wrapper is above normal content */
+}
+
+  .btn-dropdown-menu {
+  position: absolute;
+  top: 115%;
+  right: 0;
+  min-width: 200px;
+
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(16px);
+
+  border-radius: 18px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+
+  overflow: hidden;
+  display: none;
+
+  z-index: 2000; /* main overlay control */
+}
+
+
+</style>
+</html>

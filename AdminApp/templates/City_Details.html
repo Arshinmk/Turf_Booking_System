@@ -1,0 +1,37 @@
+{% extends 'Dashboard.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <section class="table-section">
+  <h2>Sports List</h2>
+
+  <table class="sport-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>City Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for i in list %}
+      <tr>
+        <td>{{i.id}}</td>
+        <td>{{i.Cityname}}</td>
+        <td class="actions">
+          <a href="{% url 'edit_city' city_id=i.id %}"><button class="btn-edit">Edit</button></a>
+          <a href="{% url 'city_delete' city_id=i.id %}"><button class="btn-delete">Delete</button></a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+</body>
+</html>
+{% endblock %}

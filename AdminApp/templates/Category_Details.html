@@ -1,0 +1,43 @@
+{% extends 'Dashboard.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <section class="table-section">
+  <h2>Sports List</h2>
+
+  <table class="sport-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Sport Name</th>
+        <th>Description</th>
+        <th>Image 1</th>
+        <th>Image 2</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for i in list %}
+      <tr>
+        <td>{{i.id}}</td>
+        <td>{{i.Sport_name}}</td>
+        <td>{{i.Sport_description}}</td>
+        <td><img src="{{i.Sport_img1.url}}"></td>
+        <td><img src="{{i.Sport_img2.url}}"></td>
+        <td class="actions">
+          <a href="{% url 'edit_category' cat_id=i.id %}"><button class="btn-edit">Edit</button></a>
+          <a href="{% url 'delete_category' cat_id=i.id %}"><button class="btn-delete">Delete</button></a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends 'Dashboard.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <section class="form-section">
+      <h2>Add New Sport</h2>
+      <p class="subtitle">Enter sport details and upload images</p>
+
+  <form class="sport-form" method="post" action="{% url 'save_category' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- Sport Name -->
+    <div class="form-group">
+      <label for="sport_name">Sport Name</label>
+      <input
+        type="text"
+        id="sport_name"
+        name="sport_name"
+        placeholder="Enter sport name"
+        required
+      />
+    </div>
+
+    <!-- Sport Description -->
+    <div class="form-group">
+      <label for="sport_description">Sport Description</label>
+      <textarea
+        id="sport_description"
+        name="sport_description"
+        rows="4"
+        placeholder="Describe the sport"
+        required
+      ></textarea>
+    </div>
+
+    <!-- Image Uploads -->
+    <div class="form-group">
+      <label>Sport Images</label>
+
+      <div class="file-grid">
+        <input type="file" name="sport_img1" required />
+        <input type="file" name="sport_img2" />
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn">Save Sport</button>
+  </form>
+</section>
+</body>
+</html>
+{% endblock %}

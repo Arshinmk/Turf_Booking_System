@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% extends 'Dashboard.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <section class="form-section">
+      <h2>Edit City</h2>
+      <p class="subtitle">Enter City Name</p>
+
+  <form class="sport-form" method="post" action="{% url 'update_city' c_id=item.id %}" >
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label>City Name</label>
+      <input
+        type="text"
+        name="city_name"
+        value="{{item.Cityname}}"
+        placeholder="Enter City Name"
+        required
+      />
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn">Save City</button>
+  </form>
+</section>
+</body>
+</html>
+{% endblock %}

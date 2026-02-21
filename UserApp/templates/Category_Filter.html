@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Turfo - Explore</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/category_filter.css' %}">
+</head>
+
+<body>
+
+<!-- TOP NAV (Same as Home) -->
+<header class="top-nav">
+    <div class="nav-container">
+        <div class="left">
+            <h2 class="logo">Turfo</h2>
+            <input type="text" placeholder="Search for Turfs, Sports or Locations">
+        </div>
+
+        <div class="right">
+            <select>
+                <option>Bangalore</option>
+                <option>Chennai</option>
+                <option>Hyderabad</option>
+            </select>
+
+            {% if request.session.username %}
+            <div class="dropdown">
+                <button class="signin" onclick="toggleDropdown()">
+                    {{request.session.username}} ▼
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{% url 'user_logout' %}">Logout</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="{% url 'user_signup' %}">
+                <button class="signin">Login</button>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- CATEGORY NAV -->
+<nav class="category-nav">
+    <div class="nav-container">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Turfs</a>
+        <a href="#">Contact</a>
+        <a href="#">Help</a>
+    </div>
+</nav>
+
+<!-- DETAIL HERO BANNER -->
+<section class="detail-hero">
+
+    <!-- Background Image -->
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+
+        <!-- Poster -->
+        <div class="hero-poster">
+            <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d">
+            <div class="release-tag">Available Today</div>
+        </div>
+
+        <!-- Details -->
+        <div class="hero-details">
+            <h1>Elite Football Arena</h1>
+
+            <div class="interest-box">
+                👍 2.8K+ players interested
+                <button class="interest-btn">I'm Interested</button>
+            </div>
+
+            <p class="hero-meta">
+                90 mins • Football • 5v5 • Floodlights
+            </p>
+
+            <div class="hero-tags">
+                <span>Outdoor</span>
+                <span>Artificial Turf</span>
+            </div>
+
+            <button class="book-btn">Book Slot</button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FOOTER (Same as Home) -->
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-col">
+            <h3>Turfo</h3>
+            <p>India’s smartest way to book premium sports turfs.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Sports</h4>
+            <a href="#">Football</a>
+            <a href="#">Cricket</a>
+            <a href="#">Badminton</a>
+            <a href="#">Box Cricket</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#">About</a>
+            <a href="#">Careers</a>
+            <a href="#">Partner</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 TurfBook
+    </div>
+</footer>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll(".slide");
+
+function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    slides[index].classList.add("active");
+}
+
+function changeSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = slides.length - 1;
+    if (currentSlide >= slides.length) currentSlide = 0;
+    showSlide(currentSlide);
+}
+
+// Auto Slide
+setInterval(() => {
+    changeSlide(1);
+}, 4000);
+</script>
+<script>
+    function toggleDropdown() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    // Optional: Close dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.signin')) {
+            const dropdown = document.getElementById("dropdownMenu");
+            if (dropdown && dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
