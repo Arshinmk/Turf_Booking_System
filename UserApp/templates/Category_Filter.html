@@ -1,134 +1,154 @@
 <!DOCTYPE html>
+{% extends 'Home.html' %}
 {% load static %}
+{% block content %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Turfo - Explore</title>
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/category_filter.css' %}">
+    <link rel="stylesheet" href="{% static 'css/allturf.css' %}">
 </head>
 
 <body>
 
-<!-- TOP NAV (Same as Home) -->
-<header class="top-nav">
-    <div class="nav-container">
-        <div class="left">
-            <h2 class="logo">Turfo</h2>
-            <input type="text" placeholder="Search for Turfs, Sports or Locations">
-        </div>
+<!-- CAROUSEL BANNER -->
+<section class="carousel">
+    <div class="carousel-container">
 
-        <div class="right">
-            <select>
-                <option>Bangalore</option>
-                <option>Chennai</option>
-                <option>Hyderabad</option>
-            </select>
-
-            {% if request.session.username %}
-            <div class="dropdown">
-                <button class="signin" onclick="toggleDropdown()">
-                    {{request.session.username}} ▼
-                </button>
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="{% url 'user_logout' %}">Logout</a>
-                </div>
+        <div class="slide active">
+            <img src="https://media.istockphoto.com/id/1403780865/photo/football-field-at-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=9ti_0r0CnjTeRXt_u7oTufSq4WaxydaeahAo0AQhwnI=">
+            <div class="caption">
+                <h1>Book Premium Football Turfs</h1>
+                <p>Play under floodlights</p>
             </div>
-            {% else %}
-            <a href="{% url 'user_signup' %}">
-                <button class="signin">Login</button>
-            </a>
-            {% endif %}
-        </div>
-    </div>
-</header>
-
-<!-- CATEGORY NAV -->
-<nav class="category-nav">
-    <div class="nav-container">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Turfs</a>
-        <a href="#">Contact</a>
-        <a href="#">Help</a>
-    </div>
-</nav>
-
-<!-- DETAIL HERO BANNER -->
-<section class="detail-hero">
-
-    <!-- Background Image -->
-    <div class="hero-bg"></div>
-
-    <div class="hero-content">
-
-        <!-- Poster -->
-        <div class="hero-poster">
-            <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d">
-            <div class="release-tag">Available Today</div>
         </div>
 
-        <!-- Details -->
-        <div class="hero-details">
-            <h1>Elite Football Arena</h1>
-
-            <div class="interest-box">
-                👍 2.8K+ players interested
-                <button class="interest-btn">I'm Interested</button>
+        <div class="slide">
+            <img src="https://plus.unsplash.com/premium_photo-1733288427325-f43bc7f0e758?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njl8fHR1cmZ8ZW58MHx8MHx8fDA%3D">
+            <div class="caption">
+                <h1>Box Cricket Arenas</h1>
+                <p>Perfect for weekend matches</p>
             </div>
-
-            <p class="hero-meta">
-                90 mins • Football • 5v5 • Floodlights
-            </p>
-
-            <div class="hero-tags">
-                <span>Outdoor</span>
-                <span>Artificial Turf</span>
-            </div>
-
-            <button class="book-btn">Book Slot</button>
         </div>
+
+        <div class="slide">
+            <img src="https://img3.khelomore.com/venues/127/images/1040x490/Pitch-3.jpg">
+            <div class="caption">
+                <h1>Indoor Badminton Courts</h1>
+                <p>Premium wooden flooring</p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <button class="prev" onclick="changeSlide(-1)">❮</button>
+        <button class="next" onclick="changeSlide(1)">❯</button>
 
     </div>
 </section>
+<section class="movies-layout">
 
+    <!-- LEFT FILTER PANEL -->
+    <div class="filter-panel">
+        <h2>Filters</h2>
 
-<!-- FOOTER (Same as Home) -->
-<footer class="main-footer">
-    <div class="footer-container">
-        <div class="footer-col">
-            <h3>Turfo</h3>
-            <p>India’s smartest way to book premium sports turfs.</p>
+        <div class="filter-box">
+            <div class="filter-header">
+                <span>Languages</span>
+                <a href="#">Clear</a>
+            </div>
+
+            <div class="filter-options">
+                <button>English</button>
+                <button>Malayalam</button>
+                <button>Hindi</button>
+                <button>Tamil</button>
+            </div>
         </div>
 
-        <div class="footer-col">
-            <h4>Sports</h4>
-            <a href="#">Football</a>
-            <a href="#">Cricket</a>
-            <a href="#">Badminton</a>
-            <a href="#">Box Cricket</a>
+<!--        <div class="filter-box">-->
+<!--            <div class="filter-header">-->
+<!--                <span>Genres</span>-->
+<!--                <a href="#">Clear</a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="filter-box">-->
+<!--            <div class="filter-header">-->
+<!--                <span>Format</span>-->
+<!--                <a href="#">Clear</a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <button class="browse-btn">Browse by Turfs</button>
+    </div>
+
+
+    <!-- RIGHT CONTENT -->
+    <div class="content-panel">
+
+        <h2 class="page-title">Turfs in Kochi</h2>
+
+        <div class="language-pills">
+            <span>Football</span>
+            <span>Cricket</span>
+            <span>Badminton</span>
+            <span>Box Cricket</span>
         </div>
 
-        <div class="footer-col">
-            <h4>Company</h4>
-            <a href="#">About</a>
-            <a href="#">Careers</a>
-            <a href="#">Partner</a>
+        <!-- Coming Soon Banner -->
+        <div class="coming-banner">
+            <h3>Coming Soon</h3>
+            <a href="#">Explore Upcoming Turfs →</a>
         </div>
 
-        <div class="footer-col">
-            <h4>Support</h4>
-            <a href="#">Help Center</a>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+        <!-- Cards -->
+        <div class="turf-grid">
+
+           {% for i in item %}
+        <div class="turf-card-modern">
+            <img src="{{ i.Turf_image1.url }}">
+
+            <div class="card-info">
+                <h4>{{ i.Turf_name }}</h4>
+                <p>{{ i.City }}</p>
+                <div class="rating">₹ {{ i.Price_per_hour }}/hr</div>
+
+                <a href="{% url 'single_turf' turf_id=i.id %}" class="book-btn">Book Now</a>
+            </div>
+        </div>
+        {% endfor %}
+
         </div>
     </div>
 
-    <div class="footer-bottom">
-        © 2026 TurfBook
-    </div>
-</footer>
+</section>
 
+<style>
+    .book-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(135deg, #00c853, #009624);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 200, 83, 0.3);
+}
+
+.book-btn:hover {
+    background: linear-gradient(135deg, #009624, #00c853);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 200, 83, 0.5);
+}
+
+.book-btn:active {
+    transform: scale(0.98);
+}
+</style>
 <script>
 let currentSlide = 0;
 const slides = document.querySelectorAll(".slide");
@@ -150,22 +170,8 @@ setInterval(() => {
     changeSlide(1);
 }, 4000);
 </script>
-<script>
-    function toggleDropdown() {
-        const menu = document.getElementById("dropdownMenu");
-        menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
 
-    // Optional: Close dropdown when clicking outside
-    window.onclick = function(event) {
-        if (!event.target.matches('.signin')) {
-            const dropdown = document.getElementById("dropdownMenu");
-            if (dropdown && dropdown.style.display === "block") {
-                dropdown.style.display = "none";
-            }
-        }
-    }
-</script>
 
 </body>
 </html>
+{% endblock %}

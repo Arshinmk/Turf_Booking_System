@@ -8,5 +8,7 @@ urlpatterns=[
     path('user_login/',views.user_login,name="user_login"),
     path('user_logout/',views.user_logout,name="user_logout"),
     path('all_turf/',views.all_turf,name="all_turf"),
-    path('category_filter/',views.category_filter,name="category_filter"),
+    path('category_filter/<cat_name>/',views.category_filter,name="category_filter"),
+    path('single_turf/<int:turf_id>/',views.single_turf,name="single_turf"),
+    path('set_city/',views.set_city,name="set_city"),
 ]

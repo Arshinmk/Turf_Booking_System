@@ -18,15 +18,21 @@
         </div>
 
         <div class="right">
-            <select>
-                <option>Bangalore</option>
-                <option>Chennai</option>
-                <option>Hyderabad</option>
-            </select>
+            <form method="POST" action="{% url 'set_city' %}">
+                {% csrf_token %}
+                <select name="city" onchange="this.form.submit()">
+                    <option value="">All Cities</option>
+                    {% for i in city %}
+                        <option value="{{ i.Cityname }}" {% if request.session.selected_city == i.Cityname %}selected{% endif %}>
+                            {{ i.Cityname }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+
             {% if request.session.username %}
             <div class="dropdown">
                 <button class="signin" onclick="toggleDropdown()">{{request.session.username}} ▼</button>
-
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="{% url 'user_logout' %}">Logout</a>
                 </div>
@@ -41,7 +47,7 @@
 <!-- CATEGORY NAV -->
 <nav class="category-nav">
     <div class="nav-container">
-        <a href="#">Home</a>
+        <a href="{% url 'home' %}">Home</a>
         <a href="#">About</a>
         <a href="{% url 'all_turf' %}">Turfs</a>
         <a href="#">Contact</a>
@@ -49,8 +55,11 @@
     </div>
 </nav>
 
+{% block content %}
 <!-- HERO -->
-<section class="banner">
+<section class="banner"
+        style="background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)),
+        url('{% static "images/home2.png" %}') center/cover no-repeat;">
     <div class="banner-container">
         <h1>PLAY. BOOK. REPEAT.</h1>
         <p>Premium Sports Turfs Near You</p>
@@ -70,7 +79,7 @@
         <div class="sport-card">
             <img src="{{i.Sport_img1.url}}">
             <h3>{{i.Sport_name}}</h3>
-            <a href="#">View Turf</a>
+            <a href="{% url 'category_filter' cat_name=i.Sport_name %}">View Turf</a>
         </div>
 
         {% endfor %}
@@ -114,7 +123,7 @@
         </div>
     </div>
 </section>
-
+{% endblock %}
 <!-- FOOTER -->
 <footer class="main-footer">
     <div class="footer-container">
@@ -204,7 +213,30 @@
 .sport-card a:hover {
     background: #be123c;
 }
+/* Make the right section items align horizontally */
+.top-nav .nav-container .right {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* space between select and buttons */
+}
 
+/* Style the select box */
+.top-nav .nav-container .right form select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Optional: adjust search bar width */
+.top-nav .left input[type="text"] {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 300px;
+}
 </style>
 
 <script>

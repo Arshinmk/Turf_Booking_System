@@ -77,14 +77,14 @@ def update_turf(request,t_id):
             f1=FileSystemStorage()
             file1=f1.save(turf_img1.name,turf_img1)
         except MultiValueDictKeyError:
-            file1=TurfDb.objects.filter(id=t_id).Turf_image1
+            file1=TurfDb.objects.get(id=t_id).Turf_image1
 
         try:
             turf_img2 = request.FILES["Turf_image2"]
             f2=FileSystemStorage()
             file2=f2.save(turf_img2.name,turf_img2)
         except MultiValueDictKeyError:
-            file2=TurfDb.objects.filter(id=t_id).Turf_image2
+            file2=TurfDb.objects.get(id=t_id).Turf_image2
 
         TurfDb.objects.filter(id=t_id).update(
             Turf_name=turf_name,

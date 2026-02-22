@@ -1,0 +1,225 @@
+{% extends 'Home.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="detail-hero">
+
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+
+        <!-- LEFT SIDE -->
+        <div class="hero-details">
+
+            <h1 class="turf-title">Elite Football Arena</h1>
+
+            <p class="turf-owner">Owned by Sports Arena Pvt Ltd</p>
+
+            <p class="turf-location">
+                📍 Koramangala, Bangalore
+            </p>
+
+            <div class="hero-tags">
+                <span>Football</span>
+                <span>5v5</span>
+                <span>Artificial Turf</span>
+            </div>
+
+            <p class="turf-description">
+                Premium artificial turf with floodlights, parking, seating,
+                and changing rooms. Ideal for evening matches and tournaments.
+            </p>
+
+            <div class="turf-price">
+                ₹1500 <span>/ hour</span>
+            </div>
+
+            <button class="book-btn">Book Slot</button>
+
+        </div>
+
+        <!-- RIGHT SIDE CAROUSEL -->
+        <div class="hero-image">
+
+            <div class="carousel">
+                <div class="slides">
+                    <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d">
+                    <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2">
+                </div>
+
+                <button class="prev">&#10094;</button>
+                <button class="next">&#10095;</button>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<style>
+
+/* ===== Banner ===== */
+.detail-hero {
+    position: relative;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to right, rgba(0,0,0,0.85) 35%, rgba(0,0,0,0.5)),
+        url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d")
+        center/cover no-repeat;
+    filter: blur(2px);
+    transform: scale(1.05);
+}
+
+.hero-content {
+    position: relative;
+    max-width: 1300px;
+    margin: auto;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+    width: 100%;
+}
+
+.hero-details {
+    flex: 1;
+    max-width: 600px;
+}
+
+/* ===== Carousel ===== */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.carousel {
+    position: relative;
+    width: 400px;
+    height: 260px;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.slides {
+    display: flex;
+    width: 200%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slides img {
+    width: 400px;
+    height: 260px;
+    object-fit: cover;
+}
+
+/* Buttons */
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+.prev:hover, .next:hover {
+    background: rgba(0,0,0,0.8);
+}
+
+/* ===== Text Styling ===== */
+.turf-title { font-size: 36px; margin-bottom: 10px; }
+.turf-owner { font-size: 14px; color: #d1d5db; margin-bottom: 10px; }
+.turf-location { font-size: 16px; margin-bottom: 15px; color: #e5e7eb; }
+
+.hero-tags { margin-bottom: 15px; }
+.hero-tags span {
+    display: inline-block;
+    background: #374151;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+.turf-description {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #d1d5db;
+}
+
+.turf-price {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.turf-price span {
+    font-size: 14px;
+    font-weight: normal;
+    color: #cbd5f5;
+}
+
+.book-btn {
+    padding: 10px 30px;
+    font-size: 14px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #00c853, #009624);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.book-btn:hover { transform: translateY(-2px); }
+
+</style>
+
+<script>
+let index = 0;
+const slides = document.querySelector('.slides');
+const totalSlides = document.querySelectorAll('.slides img').length;
+
+document.querySelector('.next').addEventListener('click', () => {
+    index = (index + 1) % totalSlides;
+    updateSlide();
+});
+
+document.querySelector('.prev').addEventListener('click', () => {
+    index = (index - 1 + totalSlides) % totalSlides;
+    updateSlide();
+});
+
+function updateSlide() {
+    slides.style.transform = `translateX(-${index * 400}px)`;
+}
+
+// Auto slide every 4 seconds
+setInterval(() => {
+    index = (index + 1) % totalSlides;
+    updateSlide();
+}, 4000);
+</script>
+
+{% endblock %}

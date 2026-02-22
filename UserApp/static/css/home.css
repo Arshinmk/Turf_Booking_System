@@ -76,7 +76,7 @@ body {
 .banner {
     height: 380px;
     background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)),
-    url("../images/homeimage.png") center/cover;
+    url("../images/home2.png") center/cover;
     display: flex;
     align-items: center;
 }

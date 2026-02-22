@@ -11,7 +11,13 @@ from django.contrib.auth.hashers import check_password
 # Create your views here.
 def home(request):
     cat=CategoryDb.objects.all()
-    return render(request,"Home.html",{"cat":cat})
+    city=CityDb.objects.all()
+    turfs = TurfDb.objects.all()
+
+    selected_city = request.session.get('selected_city')
+    if selected_city:
+        turfs = turfs.filter(City=selected_city)
+    return render(request,"Home.html",{"cat":cat,"city":city,"turfs":turfs})
 
 def user_signup(request):
     return render(request,"User_Signup.html")
@@ -73,7 +79,33 @@ def user_logout(request):
     return redirect(home)
 
 def all_turf(request):
-    return render(request,"All_Turf.html")
+    city = CityDb.objects.all()
+    item=TurfDb.objects.all()
 
-def category_filter(request):
-    return render(request,"Category_Filter.html")
+    selected_city = request.session.get('selected_city')
+    if selected_city:
+        item = item.filter(City=selected_city)
+
+    return render(request,"All_Turf.html",{"city":city,"item":item})
+
+def category_filter(request,cat_name):
+    city = CityDb.objects.all()
+    item=TurfDb.objects.filter(Sport=cat_name)
+
+    selected_city = request.session.get('selected_city')
+    if selected_city:
+        item = item.filter(City=selected_city)
+
+    return render(request,"Category_Filter.html",{"item":item,"city":city,"selected_city":selected_city})
+
+def single_turf(request,turf_id):
+    city = CityDb.objects.all()
+    data=TurfDb.objects.get(id=turf_id)
+    return render(request,"Single_Turf.html",{"data":data,"city":city})
+
+def set_city(request):
+    if request.method == "POST":
+        city_selected = request.POST.get("city")
+        request.session['selected_city'] = city_selected
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
