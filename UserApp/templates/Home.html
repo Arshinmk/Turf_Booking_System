@@ -48,10 +48,13 @@
 <nav class="category-nav">
     <div class="nav-container">
         <a href="{% url 'home' %}">Home</a>
-        <a href="#">About</a>
+        <a href="{% url 'about' %}">About</a>
         <a href="{% url 'all_turf' %}">Turfs</a>
-        <a href="#">Contact</a>
-        <a href="#">Help</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="{% url 'help' %}">Help</a>
+        {% if request.session.username %}
+        <a href="{% url 'user_booking' %}">Bookings</a>
+        {% endif %}
     </div>
 </nav>
 
@@ -63,7 +66,7 @@
     <div class="banner-container">
         <h1>PLAY. BOOK. REPEAT.</h1>
         <p>Premium Sports Turfs Near You</p>
-        <button>Explore Turfs</button>
+        <a href="{% url 'all_turf' %}"><button>Explore Turfs</button></a>
     </div>
 </section>
 
@@ -255,7 +258,29 @@
         }
     }
 </script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+{% if messages %}
+            {% for i in messages %}
+                {% if i.tags == 'success' %}
+                    <script>
+                        swal('{{i}}','','success')
+                    </script>
+                {% elif i.tags == 'warning' %}
+                    <script>
+                        swal('{{i}}','','warning')
+                    </script>
+                {% elif i.tags == 'error' %}
+                    <script>
+                        swal('{{i}}','','error')
+                    </script>
+                {% elif i.tags == 'info' %}
+                    <script>
+                        swal('{{i}}','','info')
+                    </script>
+                {% endif %}
+            {% endfor %}
+{% endif %}
 
 
 </body>

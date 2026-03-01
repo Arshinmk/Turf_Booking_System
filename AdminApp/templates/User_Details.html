@@ -16,7 +16,7 @@
         <th>Username</th>
         <th>Role</th>
         <th>Phone Number</th>
-        <th>Password</th>
+<!--        <th>Password</th>-->
         <th>Actions</th>
       </tr>
     </thead>
@@ -28,7 +28,7 @@
         <td>{{i.username}}</td>
         <td>{{i.role}}</td>
         <td>{{i.phone_number}}</td>
-        <td>{{i.password}}</td>
+<!--        <td>{{i.password}}</td>-->
         <td class="actions">
           <a href="{% url 'edit_user' user_id=i.id %}"><button class="btn-edit">Edit</button></a>
           <a href="#"><button class="btn-delete">Delete</button></a>

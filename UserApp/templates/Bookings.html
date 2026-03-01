@@ -1,0 +1,111 @@
+{% extends 'Home.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- BANNER -->
+<section class="banner"
+        style="background: linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.5)),
+        url('{% static "images/home2.png" %}') center/cover no-repeat;">
+    <div class="banner-container">
+        <h1>My Bookings</h1>
+        <p>Check all your turf bookings and manage them here.</p>
+    </div>
+</section>
+
+<!-- BOOKINGS SECTION -->
+<section class="section">
+    <div class="section-header">
+        <h2>Bookings List</h2>
+    </div>
+
+    {% if item %}
+    <div class="booking-grid">
+        {% for b in item %}
+        <div class="booking-card">
+            <div class="card-img">
+                <img src="{{ b.turf.Turf_image1.url }}" alt="{{ b.turf.Turf_name }}">
+            </div>
+            <div class="card-content">
+                <h3>{{ b.turf.Turf_name }}</h3>
+                <p>📍 {{ b.turf.City }}</p>
+                <p>Booking Date: {{ b.booking_date }}</p>
+                <p>Time Slot: {{ b.slot }}</p>
+                <p>Booking Type: {{ b.booking_type }}</p>
+                <p>Total Paid: ₹{{ b.total_price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align:center; margin-top:40px;">You have no bookings yet. Explore turfs and book your slot!</p>
+    {% endif %}
+</section>
+
+<style>
+/* BANNER */
+.banner {
+    padding: 80px 5%;
+    color: white;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 40px;
+}
+
+.banner-container h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.banner-container p {
+    font-size: 18px;
+}
+
+/* BOOKING CARDS */
+.booking-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.booking-card {
+    width: 300px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.card-img img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px 20px;
+}
+
+.card-content h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #111;
+}
+
+.card-content p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+</style>
+
+{% endblock %}

@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from AdminApp.models import *
+from UserApp.models import *
 from django.contrib.auth import authenticate,login
 from django.core.files.storage import FileSystemStorage
 from django.utils.datastructures import MultiValueDictKeyError
+from django.contrib import messages
+from AdminApp.decorators import admin_required
 
 
 # Create your views here.
+
 def admin_loginpage(request):
     return render(request,"Admin_login.html")
+
 
 def admin_login(request):
     if request.method=="POST":
@@ -25,12 +30,15 @@ def admin_login(request):
         else:
             return redirect(admin_loginpage)
 
+@admin_required
 def dashboard(request):
     return render(request,"Dashboard.html")
 #---------------------------------------------------------------------------------------------------------------------
+@admin_required
 def add_category(request):
     return render(request,"Add_Category.html")
 
+@admin_required
 def save_category(request):
     if request.method=="POST":
         sport_name=request.POST.get("sport_name")
@@ -45,14 +53,17 @@ def save_category(request):
         obj1.save()
         return redirect(add_category)
 
+@admin_required
 def category_details(request):
     list=CategoryDb.objects.all()
     return render(request,"Category_Details.html",{"list":list})
 
+@admin_required
 def edit_category(request,cat_id):
     arg=CategoryDb.objects.get(id=cat_id)
     return render(request,"Edit_Category.html",{"arg":arg})
 
+@admin_required
 def update_category(request,category_id):
     if request.method=="POST":
         sport_name=request.POST.get("sport_name")
@@ -80,18 +91,22 @@ def update_category(request,category_id):
         )
         return redirect(category_details)
 
+@admin_required
 def delete_category(request,cat_id):
     obj2=CategoryDb.objects.filter(id=cat_id).delete()
     return redirect(category_details)
 #-----------------------------------------------------------------------------------------------------------------------
+@admin_required
 def user_details(request):
     item = User.objects.filter(role__in=['user', 'owner'])
     return render(request,"User_Details.html",{"item":item})
 
+@admin_required
 def edit_user(request,user_id):
     obj=User.objects.get(id=user_id)
     return render(request,"Edit_User.html",{"obj":obj})
 
+@admin_required
 def update_user(request,ur_id):
     if request.method == "POST":
 
@@ -112,30 +127,67 @@ def update_user(request,ur_id):
         User.objects.filter(id=ur_id).update(username=uname,role=role,phone_number=phone,password=password)
         return redirect(user_details)
 #-----------------------------------------------------------------------------------------------------------------------
+@admin_required
 def add_city(request):
     return render(request,"Add_City.html")
 
+@admin_required
 def save_city(request):
     if request.method=="POST":
         cname=request.POST.get("city_name")
         CityDb(Cityname=cname).save()
         return redirect(add_city)
 
+@admin_required
 def city_details(request):
     list=CityDb.objects.all()
     return render(request,"City_Details.html",{"list":list})
 
-
+@admin_required
 def edit_city(request,city_id):
     item=CityDb.objects.get(id=city_id)
     return render(request,"Edit_City.html",{"item":item})
 
+@admin_required
 def update_city(request,c_id):
     if request.method == "POST":
         cname = request.POST.get("city_name")
         CityDb.objects.filter(id=c_id).update(Cityname=cname)
         return redirect(city_details)
 
+@admin_required
 def city_delete(request,city_id):
     CityDb.objects.filter(id=city_id).delete()
     return redirect(city_details)
+
+@admin_required
+def message_details(request):
+    item=ContactMessage.objects.all().order_by('-created_at')
+    return render(request,"Message_details.html",{"item":item})
+
+@admin_required
+def message_delete(request,msg_id):
+    ContactMessage.objects.filter(id=msg_id).delete()
+    return redirect(message_details)
+#-----------------------------------------------------------------------------------------------------------------------
+@admin_required
+def request_for_owner(request):
+    item=TurfOwnerApplication.objects.all().order_by('-created_at')
+    return render(request,"Request_for_owner.html",{"item":item})
+
+@admin_required
+def request_delete(request,onr_id):
+    TurfOwnerApplication.objects.filter(id=onr_id).delete()
+    return redirect(request_for_owner)
+
+@admin_required
+def make_owner(request, onr_id):
+    application = get_object_or_404(TurfOwnerApplication, id=onr_id)
+    user = get_object_or_404(User, username=application.username)
+
+    user.role = 'owner'
+    user.save()
+
+    messages.success(request, f"{request.user.username} is now a Turf Owner.")
+    application.delete()
+    return redirect(request_for_owner)

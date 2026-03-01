@@ -2,150 +2,581 @@
 {% load static %}
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-<link rel="stylesheet" href="{% static 'css/allturf.css' %}">
-
-<!-- CAROUSEL BANNER -->
-<section class="carousel">
-    <div class="carousel-container">
-
-        <div class="slide active">
-            <img src="https://media.istockphoto.com/id/1403780865/photo/football-field-at-sunset.webp">
-            <div class="caption">
-                <h1>Book Premium Football Turfs</h1>
-                <p>Play under floodlights</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <img src="https://plus.unsplash.com/premium_photo-1733288427325-f43bc7f0e758">
-            <div class="caption">
-                <h1>Box Cricket Arenas</h1>
-                <p>Perfect for weekend matches</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <img src="https://img3.khelomore.com/venues/127/images/1040x490/Pitch-3.jpg">
-            <div class="caption">
-                <h1>Indoor Badminton Courts</h1>
-                <p>Premium wooden flooring</p>
-            </div>
-        </div>
-
-        <button class="prev" onclick="changeSlide(-1)">❮</button>
-        <button class="next" onclick="changeSlide(1)">❯</button>
-
+<!-- HERO SECTION WITH CITY DYNAMIC CONTENT -->
+<section class="banner"
+        style="background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.4)),
+        url('https://media.istockphoto.com/id/1403780865/photo/football-field-at-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=9ti_0r0CnjTeRXt_u7oTufSq4WaxydaeahAo0AQhwnI=') center/cover no-repeat;">
+    <div class="banner-container">
+        {% if request.session.selected_city %}
+        <h1>Explore All Turfs in <span class="highlight">{{request.session.selected_city}}</span></h1>
+         {% else %}
+        <h1>Explore All Premium Turfs</h1>
+        {% endif %}
+        <p>Book world-class sports facilities with instant confirmation</p>
     </div>
 </section>
 
-<!-- MAIN CONTENT (NO LEFT PANEL) -->
-<section class="movies-layout">
-
-    <div class="content-panel" style="width:100%;">
-
-        <h2 class="page-title">Turfs in Kochi</h2>
-
-        <div class="language-pills">
-            <span>Football</span>
-            <span>Cricket</span>
-            <span>Badminton</span>
-            <span>Box Cricket</span>
-        </div>
-
-        <div class="coming-banner">
-            <h3>Coming Soon</h3>
-            <a href="#">Explore Upcoming Turfs →</a>
-        </div>
-
-        <!-- Turf Cards -->
-        <div class="turf-grid">
-            {% for i in item %}
-            <div class="turf-card-modern">
-                <img src="{{ i.Turf_image1.url }}" alt="Turf Image">
-                <div class="card-info">
-                    <h4>{{ i.Turf_name }}</h4>
-                    <p>{{ i.City }}</p>
-                    <div class="rating">₹ {{ i.Price_per_hour }}/hr</div>
-
-                    <a href="{% url 'single_turf' turf_id=i.id %}" class="book-btn">
-                         Book Turf
-                    </a>
+<!-- REDESIGNED CATEGORY SECTION -->
+<section class="section">
+    <div class="category-wrapper">
+        <h2 class="category-title">Popular Categories</h2>
+        <div class="category-pills">
+            {% for i in category %}
+            <a href="{% url 'category_filter' cat_name=i.Sport_name %}" class="category-link">
+                <div class="category-pill">
+                    <span class="category-icon">
+                        {% if i.Sport_name == 'Football' %}⚽
+                        {% elif i.Sport_name == 'Cricket' %}🏏
+                        {% elif i.Sport_name == 'Badminton' %}🏸
+                        {% elif i.Sport_name == 'Box Cricket' %}📦
+                        {% elif i.Sport_name == 'Tennis' %}🎾
+                        {% elif i.Sport_name == 'Basketball' %}🏀
+                        {% else %}🏟️
+                        {% endif %}
+                    </span>
+                    <span class="category-name">{{i.Sport_name}}</span>
                 </div>
-            </div>
+            </a>
             {% endfor %}
         </div>
-
     </div>
-
 </section>
 
-<script>
-let currentSlide = 0;
-const slides = document.querySelectorAll(".slide");
+<!-- TURF GRID WITH 4 CARDS PER ROW -->
+<section class="section light-bg">
+    <div class="section-header">
+        <h2 class="section-title">Featured <span class="highlight">Turfs</span></h2>
+        {% if request.session.selected_city %}
+        <p class="section-subtitle">Book the best turfs in {{request.session.selected_city}} at best prices</p>
+        {% else %}
+        <p class="section-subtitle">Discover top-rated turfs with premium amenities</p>
+        {% endif %}
+    </div>
 
-function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove("active"));
-    slides[index].classList.add("active");
-}
-
-function changeSlide(direction) {
-    currentSlide += direction;
-    if (currentSlide < 0) currentSlide = slides.length - 1;
-    if (currentSlide >= slides.length) currentSlide = 0;
-    showSlide(currentSlide);
-}
-
-setInterval(() => {
-    changeSlide(1);
-}, 4000);
-</script>
+    <div class="turf-grid">
+        {% for i in item %}
+        <div class="turf-card">
+            <div class="turf-image-wrapper">
+                <img src="{{ i.Turf_image1.url }}" alt="{{ i.Turf_name }}">
+                <div class="turf-category">{{ i.Category.Sport_name }}</div>
+                <div class="turf-price">₹{{ i.Price_per_hour }}<span>/hr</span></div>
+            </div>
+            <div class="turf-info">
+                <h4 class="turf-name">{{ i.Turf_name }}</h4>
+                <div class="turf-location">
+                    <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span>{{ i.City }}</span>
+                </div>
+                <div class="turf-amenities">
+                    <span class="amenity">🏟️ Floodlights</span>
+                    <span class="amenity">🅿️ Parking</span>
+                    <span class="amenity">🚿 Changing Room</span>
+                </div>
+                <a href="{% url 'single_turf' turf_id=i.id %}" class="cta-btn">
+                    Book Now
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-turfs-message">
+            <p>No turfs available in this category.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
 
 <style>
+/* ===== GLOBAL STYLES ===== */
+:root {
+    --primary: #e11d48;
+    --primary-dark: #be123c;
+    --primary-light: #fff1f3;
+    --secondary: #0f172a;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== HERO SECTION ===== */
+.banner {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    background-attachment: fixed;
+}
+
+.banner-container {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.banner-container h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.highlight {
+    color: var(--primary);
+    position: relative;
+    display: inline-block;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: rgba(225, 29, 72, 0.3);
+    z-index: -1;
+}
+
+.banner-container p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.hero-btn {
+    padding: 16px 40px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3);
+    border: 2px solid transparent;
+}
+
+.hero-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(225, 29, 72, 0.4);
+}
+
+/* ===== CATEGORY SECTION ===== */
+.category-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.category-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.category-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), #f43f5e);
+    border-radius: 2px;
+}
+
+.category-pills {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.category-link {
+    text-decoration: none;
+}
+
+.category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--white);
+    border-radius: 50px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid rgba(225, 29, 72, 0.1);
+}
+
+.category-pill:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--white), var(--primary-light));
+}
+
+.category-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.category-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 15px;
+}
+
+/* ===== SECTION HEADER ===== */
+.section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.light-bg {
+    background: var(--bg-light);
+    padding: 60px 20px;
+}
+
+/* ===== TURF GRID ===== */
 .turf-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.turf-card-modern {
-    width: 100%;
-    background: white;
-    border-radius: 16px;
+/* ===== TURF CARD ===== */
+.turf-card {
+    background: var(--white);
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    transition: 0.3s ease;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
 }
 
-.turf-card-modern:hover {
-    transform: translateY(-8px);
+.turf-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(225, 29, 72, 0.2);
 }
 
-.turf-card-modern img {
+/* Image Wrapper */
+.turf-image-wrapper {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+}
+
+.turf-image-wrapper img {
     width: 100%;
-    height: 260px;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.6s ease;
 }
 
-.card-info {
-    padding: 15px;
+.turf-card:hover .turf-image-wrapper img {
+    transform: scale(1.1);
 }
 
-.rating {
-    margin-top: 8px;
-    font-weight: bold;
-    color: #22c55e;
+/* Category Badge */
+.turf-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white);
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+    z-index: 2;
 }
 
-.book-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 14px;
-    background: #e11d48;
+/* Price Tag */
+.turf-price {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    z-index: 2;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.turf-price span {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-left: 2px;
+}
+
+/* Discount Badge */
+.turf-discount {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
-    text-decoration: none;
-    border-radius: 6px;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Turf Info */
+.turf-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+
+.turf-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Location */
+.turf-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+.location-icon {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-light);
+}
+
+/* Amenities */
+.turf-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 5px 0;
+}
+
+.amenity {
+    background: var(--bg-light);
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 11px;
+    color: var(--text-dark);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* CTA Button */
+.cta-btn {
+    margin-top: auto;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
     font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.cta-btn:hover {
+    background: linear-gradient(135deg, var(--primary-dark), #9f1239);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(225, 29, 72, 0.3);
+}
+
+.cta-btn:hover .btn-icon {
+    transform: translateX(5px);
+}
+
+.btn-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+/* View All Button */
+.view-all-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 35px;
+    background: transparent;
+    color: var(--primary);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: var(--transition);
+    border: 2px solid var(--primary);
+}
+
+.view-all-btn:hover {
+    background: var(--primary);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(225, 29, 72, 0.2);
+}
+
+/* No Turfs Message */
+.no-turfs-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    background: var(--white);
+    border-radius: 20px;
+    color: var(--text-light);
+    font-size: 18px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .turf-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 900px) {
+    .turf-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .banner-container h1 {
+        font-size: 36px;
+    }
+
+    .section-title {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .turf-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-pills {
+        gap: 10px;
+    }
+
+    .category-pill {
+        padding: 8px 16px;
+    }
+
+    .category-name {
+        font-size: 13px;
+    }
+
+    .banner-container h1 {
+        font-size: 28px;
+    }
+
+    .banner-container p {
+        font-size: 16px;
+    }
+
+    .hero-btn {
+        padding: 14px 30px;
+    }
+
+    .section-title {
+        font-size: 26px;
+    }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.turf-card {
+    animation: fadeInUp 0.6s ease forwards;
 }
 </style>
 

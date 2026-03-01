@@ -3,6 +3,7 @@
 
 {% block content %}
 
+<!-- ================= HERO SECTION ================= -->
 <section class="detail-hero">
 
     <div class="hero-bg"></div>
@@ -12,54 +13,112 @@
         <!-- LEFT SIDE -->
         <div class="hero-details">
 
-            <h1 class="turf-title">Elite Football Arena</h1>
+            <h1 class="turf-title">{{data.Turf_name}}</h1>
 
-            <p class="turf-owner">Owned by Sports Arena Pvt Ltd</p>
+            <p class="turf-owner">{{data.Owner}}</p>
 
             <p class="turf-location">
-                📍 Koramangala, Bangalore
+                📍 {{data.Location}}
             </p>
 
             <div class="hero-tags">
-                <span>Football</span>
-                <span>5v5</span>
-                <span>Artificial Turf</span>
+                <span>{{data.Sport}}</span>
+                <span>{{data.Size}}</span>
             </div>
 
             <p class="turf-description">
-                Premium artificial turf with floodlights, parking, seating,
-                and changing rooms. Ideal for evening matches and tournaments.
+                {{data.Description}}
             </p>
 
             <div class="turf-price">
-                ₹1500 <span>/ hour</span>
+                ₹{{data.Price_per_hour}} <span>/ hour</span>
             </div>
-
-            <button class="book-btn">Book Slot</button>
 
         </div>
 
         <!-- RIGHT SIDE CAROUSEL -->
         <div class="hero-image">
-
             <div class="carousel">
                 <div class="slides">
-                    <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d">
-                    <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2">
+                    <img src="{{data.Turf_image1.url}}">
+                    <img src="{{data.Turf_image2.url}}">
                 </div>
-
                 <button class="prev">&#10094;</button>
                 <button class="next">&#10095;</button>
             </div>
-
         </div>
 
     </div>
 </section>
 
+
+<!-- ================= BOOKING SECTION ================= -->
+{% if request.session.username %}
+    <section class="booking-section">
+        <div class="booking-container">
+            <h2>Select Date & Time</h2>
+
+            <!-- DATE CARDS (Django Generated) -->
+            <div class="dates-container">
+                {% for d in dates %}
+                    <div class="date-card
+                        {% if selected_date == d|date:"Y-m-d" %}active{% endif %}"
+                         onclick="selectDate('{{ d|date:"Y-m-d" }}')">
+
+                        <div class="date-day">{{ d|date:"D" }}</div>
+                        <div class="date-number">{{ d|date:"d" }}</div>
+                        <div class="date-day">{{ d|date:"M" }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- BOOKING FORM -->
+            <form method="POST" action="{% url 'book_slot' %}">
+                {% csrf_token %}
+
+                <input type="hidden" name="turf_id" value="{{data.id}}">
+                <input type="hidden" name="booking_date" id="selected-date" value="{{selected_date}}">
+                <input type="hidden" name="slot" id="selected-slot">
+
+                <h3 class="slot-heading">Available Slots</h3>
+
+                <div class="slots-container">
+                    {% for s in slots %}
+                        {% if s in booked_slots %}
+                            <div class="slot disabled">
+                                {{s}} <br><small>Booked</small>
+                            </div>
+                        {% else %}
+                            <div class="slot" onclick="selectSlot(this, '{{s}}')">
+                                {{s}}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="confirm-booking">
+                    Confirm Booking
+                </button>
+
+            </form>
+        </div>
+    </section>
+{% else %}
+    <!-- ================= LOGIN REQUIRED DIV ================= -->
+    <section class="login-required-section">
+        <div class="login-required-container">
+            <div class="lock-icon">🔒</div>
+            <h2 class="login-title">Login Required</h2>
+            <p class="login-message">You can book this turf only after logging in</p>
+            <a href="{% url 'user_signup' %}" class="login-redirect-btn">Go to Login Page</a>
+        </div>
+    </section>
+{% endif %}
+
+<!-- ================= STYLES ================= -->
 <style>
 
-/* ===== Banner ===== */
+/* Hero */
 .detail-hero {
     position: relative;
     height: 450px;
@@ -87,21 +146,8 @@
     padding: 40px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     gap: 60px;
     width: 100%;
-}
-
-.hero-details {
-    flex: 1;
-    max-width: 600px;
-}
-
-/* ===== Carousel ===== */
-.hero-image {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
 }
 
 .carousel {
@@ -115,7 +161,6 @@
 
 .slides {
     display: flex;
-    width: 200%;
     transition: transform 0.5s ease-in-out;
 }
 
@@ -125,7 +170,6 @@
     object-fit: cover;
 }
 
-/* Buttons */
 .prev, .next {
     position: absolute;
     top: 50%;
@@ -142,84 +186,268 @@
 .prev { left: 10px; }
 .next { right: 10px; }
 
-.prev:hover, .next:hover {
-    background: rgba(0,0,0,0.8);
+/* Booking Section (Logged In) */
+.booking-section {
+    padding: 70px 20px;
+    background: #f9fafb;
+    display: flex;
+    justify-content: center;
 }
 
-/* ===== Text Styling ===== */
-.turf-title { font-size: 36px; margin-bottom: 10px; }
-.turf-owner { font-size: 14px; color: #d1d5db; margin-bottom: 10px; }
-.turf-location { font-size: 16px; margin-bottom: 15px; color: #e5e7eb; }
-
-.hero-tags { margin-bottom: 15px; }
-.hero-tags span {
-    display: inline-block;
-    background: #374151;
-    padding: 6px 14px;
-    border-radius: 20px;
-    margin-right: 10px;
-    font-size: 13px;
+.booking-container {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 750px;
 }
 
-.turf-description {
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    color: #d1d5db;
+.dates-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    margin-bottom: 35px;
 }
 
-.turf-price {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.turf-price span {
-    font-size: 14px;
-    font-weight: normal;
-    color: #cbd5f5;
-}
-
-.book-btn {
-    padding: 10px 30px;
-    font-size: 14px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #00c853, #009624);
-    border: none;
-    border-radius: 8px;
-    color: white;
+.date-card {
+    min-width: 100px;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
     cursor: pointer;
-    transition: 0.3s ease;
+    border: 1px solid #ddd;
+    background: #f3f4f6;
+    transition: 0.3s;
 }
 
-.book-btn:hover { transform: translateY(-2px); }
+.date-card.active {
+    background: #00c853;
+    color: white;
+    border: none;
+}
 
+.slots-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.slot {
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+    background: #f3f4f6;
+    transition: all 0.3s ease;
+}
+
+.slot:hover:not(.disabled) {
+    background: #00c853;
+    color: white;
+    border-color: #00c853;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,200,83,0.3);
+}
+
+.slot.active {
+    background: #00c853;
+    color: white;
+    border: none;
+}
+
+.slot.disabled {
+    background: #eee;
+    cursor: not-allowed;
+    color: #999;
+    border-color: #ddd;
+    opacity: 0.7;
+}
+
+.confirm-booking {
+    margin-top: 35px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #00c853, #009624);
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.confirm-booking:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,200,83,0.4);
+}
+
+/* Login Required Div */
+.login-required-section {
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.login-required-container {
+    background: white;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid rgba(225, 29, 72, 0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.lock-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+.login-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.login-message {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.login-redirect-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3);
+}
+
+.login-redirect-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(225, 29, 72, 0.4);
+    background: linear-gradient(135deg, #be123c, #9f1239);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .hero-content {
+        flex-direction: column;
+    }
+
+    .carousel {
+        width: 100%;
+        height: 240px;
+    }
+
+    .slides img {
+        width: 100%;
+        height: 240px;
+    }
+
+    .booking-container {
+        width: 100%;
+        padding: 30px 20px;
+    }
+
+    .slots-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .slots-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .login-required-container {
+        padding: 40px 20px;
+    }
+
+    .login-title {
+        font-size: 24px;
+    }
+}
 </style>
 
+<!-- ================= JAVASCRIPT ================= -->
 <script>
+
+/* Carousel */
 let index = 0;
 const slides = document.querySelector('.slides');
-const totalSlides = document.querySelectorAll('.slides img').length;
+const images = document.querySelectorAll('.slides img');
+const totalSlides = images.length;
 
-document.querySelector('.next').addEventListener('click', () => {
-    index = (index + 1) % totalSlides;
-    updateSlide();
-});
+// Only initialize carousel if elements exist
+if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').addEventListener('click', () => {
+        index = (index + 1) % totalSlides;
+        updateSlide();
+    });
 
-document.querySelector('.prev').addEventListener('click', () => {
-    index = (index - 1 + totalSlides) % totalSlides;
-    updateSlide();
-});
-
-function updateSlide() {
-    slides.style.transform = `translateX(-${index * 400}px)`;
+    document.querySelector('.prev').addEventListener('click', () => {
+        index = (index - 1 + totalSlides) % totalSlides;
+        updateSlide();
+    });
 }
 
-// Auto slide every 4 seconds
-setInterval(() => {
-    index = (index + 1) % totalSlides;
-    updateSlide();
-}, 4000);
+function updateSlide() {
+    if (slides) {
+        slides.style.transform = `translateX(-${index * 400}px)`;
+    }
+}
+
+/* Select Date (Reload Page) */
+function selectDate(dateValue){
+    const url = new URL(window.location.href);
+    url.searchParams.set('date', dateValue);
+    window.location.href = url.toString();
+}
+
+/* Select Slot */
+function selectSlot(element, slotValue){
+    document.querySelectorAll(".slot").forEach(s => {
+        s.classList.remove("active");
+    });
+    element.classList.add("active");
+    document.getElementById("selected-slot").value = slotValue;
+}
+
 </script>
 
 {% endblock %}

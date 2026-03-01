@@ -54,6 +54,22 @@
             </ul>
           </li>
 
+          <li class="menu-item has-dropdown">
+            <a href="{% url 'message_details' %}">
+              <div class="dropdown-toggle">
+              Messages
+            </div>
+            </a>
+          </li>
+
+          <li class="menu-item has-dropdown">
+            <a href="{% url 'request_for_owner' %}">
+              <div class="dropdown-toggle">
+              Request For Owner
+            </div>
+            </a>
+          </li>
+
           <li class="menu-item">Notifications</li>
           <li class="menu-item">Support</li>
         </ul>
@@ -152,6 +168,28 @@
     });
   });
   </script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+            {% for i in messages %}
+                {% if i.tags == 'success' %}
+                    <script>
+                        swal('{{i}}','','success')
+                    </script>
+                {% elif i.tags == 'warning' %}
+                    <script>
+                        swal('{{i}}','','warning')
+                    </script>
+                {% elif i.tags == 'error' %}
+                    <script>
+                        swal('{{i}}','','error')
+                    </script>
+                {% elif i.tags == 'info' %}
+                    <script>
+                        swal('{{i}}','','info')
+                    </script>
+                {% endif %}
+            {% endfor %}
+{% endif %}
 
 </body>
 
@@ -232,7 +270,5 @@
 
   z-index: 2000; /* main overlay control */
 }
-
-
 </style>
 </html>

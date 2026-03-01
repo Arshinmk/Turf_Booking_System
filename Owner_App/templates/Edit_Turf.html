@@ -1,103 +1,184 @@
 {% extends 'Owner_Dash.html' %}
 {% block content %}
 
-<h3 class="mb-4">Edit Turf</h3>
-
-<div class="card shadow-sm">
-    <div class="card-header bg-dark text-white">
-        Turf Details
-    </div>
-    <div class="card-body">
-
-        <form method="post" action="{% url 'update_turf' t_id=turf.id %}" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <div class="row g-3">
-
-                <div class="col-lg-6">
-                    <label class="form-label">Turf Name</label>
-                    <input type="text" name="Turf_name" class="form-control" value="{{turf.Turf_name}}" required>
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="form-label">Sport</label>
-                    <select name="Sport" class="form-select" required>
-                        <option>{{turf.Sport}}</option>
-                        {% for i in item %}
-                        <option>{{i.Sport_name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="form-label">Owner</label>
-                    <input type="text" name="Owner" value="{{request.session.username}}" class="form-control" required readonly>
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="form-label">City</label>
-                    <select name="City" class="form-select" required>
-                        <option>{{turf.City}}</option>
-                        {% for i in data %}
-                        <option>{{i.Cityname}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label">Location</label>
-                    <input type="text" name="Location" class="form-control" value="{{turf.Location}}" required>
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="form-label">Price Per Hour (₹)</label>
-                    <input type="number" min="1" name="Price_per_hour" class="form-control" value="{{turf.Price_per_hour}}" required>
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="form-label">Size</label>
-                    <select name="Size" class="form-select" required>
-                        <option>{{turf.Size}}</option>
-                        <option value="5v5">5v5</option>
-                        <option value="7v7">7v7</option>
-                        <option value="9v9">9v9</option>
-                        <option value="Full Ground">Full Ground</option>
-                    </select>
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label">Description</label>
-                    <textarea name="Description" class="form-control" rows="4" required>{{turf.Description}}</textarea>
-                </div>
-
-                <!-- Turf Images Aligned -->
-                <div class="col-lg-6">
-                    <label class="form-label">Turf Image 1</label>
-                    <div class="mb-2">
-                        <img src="{{turf.Turf_image1.url}}" width="200px" class="img-fluid rounded shadow-sm" alt="Turf Image 1">
-                    </div>
-                    <input type="file" name="Turf_image1" class="form-control">
-                </div>
-
-                <div class="col-lg-6">
-                    <label class="form-label">Turf Image 2</label>
-                    <div class="mb-2">
-                        <img src="{{turf.Turf_image2.url}}" width="200px" class="img-fluid rounded shadow-sm" alt="Turf Image 2">
-                    </div>
-                    <input type="file" name="Turf_image2" class="form-control">
-                </div>
-
-            </div>
-
-            <div class="mt-4 text-end">
-                <button type="submit" class="btn btn-success px-4">
-                    Update Turf
-                </button>
-            </div>
-
-        </form>
-
+<!-- Page Header -->
+<div class="dashboard-header d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="mb-0">Edit Turf</h4>
+        <small class="text-muted">Update your turf details below</small>
     </div>
 </div>
+
+<!-- Form Card -->
+<div class="stat-card mt-4">
+
+    <form method="post" action="{% url 'update_turf' t_id=turf.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row g-4">
+
+            <!-- Turf Name -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Turf Name</label>
+                <input type="text" name="Turf_name"
+                       class="form-control modern-input"
+                       value="{{ turf.Turf_name }}" required>
+            </div>
+
+            <!-- Sport -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Sport</label>
+                <select name="Sport" class="form-select modern-input" required>
+                    <option selected>{{ turf.Sport }}</option>
+                    {% for i in item %}
+                        <option>{{ i.Sport_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Owner -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Owner</label>
+                <input type="text" name="Owner"
+                       value="{{ request.session.username }}"
+                       class="form-control modern-input bg-light"
+                       readonly>
+            </div>
+
+            <!-- City -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">City</label>
+                <select name="City" class="form-select modern-input" required>
+                    <option selected>{{ turf.City }}</option>
+                    {% for i in data %}
+                        <option>{{ i.Cityname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Location -->
+            <div class="col-12">
+                <label class="form-label fw-semibold">Location</label>
+                <input type="text" name="Location"
+                       class="form-control modern-input"
+                       value="{{ turf.Location }}" required>
+            </div>
+
+            <!-- Price -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Price Per Hour (₹)</label>
+                <input type="number" min="1"
+                       name="Price_per_hour"
+                       class="form-control modern-input"
+                       value="{{ turf.Price_per_hour }}" required>
+            </div>
+
+            <!-- Size -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Size</label>
+                <select name="Size" class="form-select modern-input" required>
+                    <option selected>{{ turf.Size }}</option>
+                    <option value="5v5">5v5</option>
+                    <option value="7v7">7v7</option>
+                    <option value="9v9">9v9</option>
+                    <option value="Full Ground">Full Ground</option>
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea name="Description"
+                          class="form-control modern-input"
+                          rows="4"
+                          required>{{ turf.Description }}</textarea>
+            </div>
+
+            <!-- Image 1 -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Turf Image 1</label>
+
+                <div class="image-preview-box mb-3">
+                    <img src="{{ turf.Turf_image1.url }}"
+                         class="preview-img"
+                         alt="Turf Image 1">
+                </div>
+
+                <input type="file" name="Turf_image1"
+                       class="form-control modern-input">
+            </div>
+
+            <!-- Image 2 -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Turf Image 2</label>
+
+                <div class="image-preview-box mb-3">
+                    <img src="{{ turf.Turf_image2.url }}"
+                         class="preview-img"
+                         alt="Turf Image 2">
+                </div>
+
+                <input type="file" name="Turf_image2"
+                       class="form-control modern-input">
+            </div>
+
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-5 text-end">
+            <button type="submit"
+                    class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-check-circle me-2"></i> Update Turf
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<style>
+    .stat-card {
+        border-radius: 15px;
+        padding: 30px;
+        background: white;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .modern-input {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #e3e6f0;
+        transition: all 0.3s ease;
+    }
+
+    .modern-input:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.15rem rgba(78, 115, 223, 0.25);
+    }
+
+    textarea.modern-input {
+        resize: none;
+    }
+
+    .image-preview-box {
+        background: #f8f9fc;
+        padding: 10px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .preview-img {
+        max-width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: 0.3s;
+    }
+
+    .preview-img:hover {
+        transform: scale(1.05);
+    }
+</style>
 
 {% endblock %}

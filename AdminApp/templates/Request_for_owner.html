@@ -1,0 +1,124 @@
+{% extends 'Dashboard.html' %}
+{% block content %}
+
+<div class="main">
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Turf Owner Requests</h1>
+            <p class="subtitle">All turf owner applications</p>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <section class="table-section">
+        <h2>Applications List</h2>
+
+        <table class="sport-table">
+            <thead>
+                <tr>
+                    <th>Owner Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Turf Name</th>
+                    <th>City</th>
+                    <th>Message</th>
+                    <th>Applied On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for i in item %}
+                <tr>
+                    <td>{{ i.owner_name }}</td>
+                    <td>{{ i.username }}</td>
+                    <td>{{ i.owner_email }}</td>
+                    <td>{{ i.owner_phone }}</td>
+                    <td>{{ i.turf_name }}</td>
+                    <td>{{ i.turf_city }}</td>
+                    <td style="max-width:200px;">
+                        {{ i.turf_message|default:"-" }}
+                    </td>
+                    <td>{{ i.created_at|date:"d M Y, h:i A" }}</td>
+                    <td>
+                        <div class="actions">
+                            <a href="{% url 'request_delete' onr_id=i.id%}">
+                                <button onclick="return confirm('Delete this request?');"
+                                        class="btn-delete">
+                                    Delete Request
+                                </button>
+                            </a>
+
+                            <a href="{% url 'make_owner' onr_id=i.id%}">
+                                <button onclick="return confirm('Approve this owner?');"
+                                        class="btn-approve">
+                                    Make Owner
+                                </button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" style="text-align:center;">No applications found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+</div>
+
+<style>
+/* Action Button Container */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Delete Button */
+.btn-delete {
+  background: linear-gradient(135deg, #f87171, #dc2626);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(220,38,38,0.4);
+}
+
+/* Make Owner Button */
+.btn-approve {
+  background: linear-gradient(135deg, #34d399, #059669);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-approve:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(5,150,105,0.4);
+}
+
+/* Equal Button Width */
+.actions button {
+  min-width: 120px;
+}
+</style>
+
+{% endblock %}

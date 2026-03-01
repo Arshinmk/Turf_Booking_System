@@ -1,0 +1,182 @@
+{% extends 'Home.html' %}
+{% load static %}
+{% block content %}
+
+<section class="razorpay-section">
+
+    <div class="razorpay-container">
+
+        <!-- Booking Summary -->
+        <div class="razorpay-card summary-card">
+            <h2>Booking Summary</h2>
+
+            <div class="summary-item">
+                <span>Turf</span>
+                <strong>{{ booking.turf_name }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Date</span>
+                <strong>{{ booking.booking_date }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Time Slot</span>
+                <strong>{{ booking.slot }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Price / Hour</span>
+                <strong>₹ {{ booking.turf_price }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Convenience Fee</span>
+                <strong>₹ {{ booking.conv_fee }}</strong>
+            </div>
+
+            <hr>
+
+            <div class="summary-total">
+                <span>Total Amount</span>
+                <strong>₹ {{ booking.price }}</strong>
+            </div>
+        </div>
+
+        <!-- Payment Card -->
+        <div class="razorpay-card payment-card">
+            <h2>Complete Payment</h2>
+            <p class="payment-note">
+                Click below to proceed to Razorpay and complete your booking.
+            </p>
+
+            <button id="pay-btn" class="pay-btn">
+                Pay ₹ {{ booking.price }}
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ razorpay_key }}",
+    "amount": "{{ amount }}",
+    "currency": "INR",
+    "name": "Turf Booking",
+    "description": "Slot Booking Payment",
+    "order_id": "{{ order_id }}",
+
+    "handler": function (response) {
+
+        fetch("{% url 'payment_success' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify(response)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                window.location.href = "/";
+            } else {
+                alert("Payment verification failed!");
+            }
+        });
+    },
+
+    "theme": {
+        "color": "#e11d48"
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById("pay-btn").onclick = function(e) {
+    rzp.open();
+    e.preventDefault();
+};
+</script>
+
+
+<style>
+.razorpay-section {
+    padding: 60px 5%;
+    background: #f8f9fa;
+}
+
+.razorpay-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+}
+
+.razorpay-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 420px;
+}
+
+.summary-card h2,
+.payment-card h2 {
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.payment-note {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.pay-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    background: #e11d48;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pay-btn:hover {
+    background: #be123c;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .razorpay-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+
+{% endblock %}

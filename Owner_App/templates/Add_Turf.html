@@ -1,100 +1,146 @@
 {% extends 'Owner_Dash.html' %}
 {% block content %}
 
-    <h3 class="mb-4">Add New Turf</h3>
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            Turf Details
-        </div>
-        <div class="card-body">
-
-            <form method="post" action="{% url 'save_turf' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <div class="row g-3">
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Turf Name</label>
-                        <input type="text" name="Turf_name" class="form-control" required>
-                    </div>
-
-                    <!-- Sport Select -->
-                    <div class="col-lg-6">
-                        <label class="form-label">Sport</label>
-                        <select name="Sport" class="form-select" required>
-                            <option value="">Select Sport</option>
-                          {% for i in item %}
-                            <option>{{i.Sport_name}}</option>
-                          {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Owner</label>
-                        <input type="text" name="Owner" value="{{request.session.username}}" class="form-control" required readonly>
-                    </div>
-
-                    <!-- City Select -->
-                    <div class="col-lg-6">
-                        <label class="form-label">City</label>
-                        <select name="City" class="form-select" required>
-                            <option value="">Select City</option>
-                          {% for i in data %}
-                            <option>{{i.Cityname}}</option>
-                          {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label">Location</label>
-                        <input type="text" name="Location" class="form-control" required>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Price Per Hour (₹)</label>
-                        <input type="number" min="1" name="Price_per_hour" class="form-control" required>
-                    </div>
-
-                    <!-- Size Select -->
-                    <div class="col-lg-6">
-                        <label class="form-label">Size</label>
-                        <select name="Size" class="form-select" required>
-                            <option value="">Select Size</option>
-                            <option value="5v5">5v5</option>
-                            <option value="7v7">7v7</option>
-                            <option value="9v9">9v9</option>
-                            <option value="Full Ground">Full Ground</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label">Description</label>
-                        <textarea name="Description" class="form-control" rows="4" required></textarea>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Turf Image 1</label>
-                        <input type="file" name="Turf_image1" class="form-control" required>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Turf Image 2</label>
-                        <input type="file" name="Turf_image2" class="form-control" required>
-                    </div>
-
-                </div>
-
-                <div class="mt-4 text-end">
-                    <button type="submit" class="btn btn-success px-4">
-                        Add Turf
-                    </button>
-                </div>
-
-            </form>
-
-        </div>
+<!-- Page Header -->
+<div class="dashboard-header d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="mb-0">Add New Turf</h4>
+        <small class="text-muted">Fill in the details to list your turf</small>
     </div>
+</div>
 
+<!-- Form Card -->
+<div class="stat-card mt-4">
+
+    <form method="post" action="{% url 'save_turf' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row g-4">
+
+            <!-- Turf Name -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Turf Name</label>
+                <input type="text" name="Turf_name" class="form-control modern-input" placeholder="Enter turf name" required>
+            </div>
+
+            <!-- Sport -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Sport</label>
+                <select name="Sport" class="form-select modern-input" required>
+                    <option value="">Select Sport</option>
+                    {% for i in item %}
+                        <option>{{ i.Sport_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Owner -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Owner</label>
+                <input type="text" name="Owner"
+                       value="{{ request.session.username }}"
+                       class="form-control modern-input bg-light"
+                       readonly>
+            </div>
+
+            <!-- City -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">City</label>
+                <select name="City" class="form-select modern-input" required>
+                    <option value="">Select City</option>
+                    {% for i in data %}
+                        <option>{{ i.Cityname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Location -->
+            <div class="col-12">
+                <label class="form-label fw-semibold">Location</label>
+                <input type="text" name="Location"
+                       class="form-control modern-input"
+                       placeholder="Enter full address" required>
+            </div>
+
+            <!-- Price -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Price Per Hour (₹)</label>
+                <input type="number" min="1"
+                       name="Price_per_hour"
+                       class="form-control modern-input"
+                       placeholder="Enter price" required>
+            </div>
+
+            <!-- Size -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Size</label>
+                <select name="Size" class="form-select modern-input" required>
+                    <option value="">Select Size</option>
+                    <option value="5v5">5v5</option>
+                    <option value="7v7">7v7</option>
+                    <option value="9v9">9v9</option>
+                    <option value="Full Ground">Full Ground</option>
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea name="Description"
+                          class="form-control modern-input"
+                          rows="4"
+                          placeholder="Describe your turf facilities..."
+                          required></textarea>
+            </div>
+
+            <!-- Images -->
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Turf Image 1</label>
+                <input type="file" name="Turf_image1" class="form-control modern-input" required>
+            </div>
+
+            <div class="col-lg-6">
+                <label class="form-label fw-semibold">Turf Image 2</label>
+                <input type="file" name="Turf_image2" class="form-control modern-input" required>
+            </div>
+
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-5 text-end">
+            <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-plus-circle me-2"></i> Add Turf
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<style>
+    /* Modern Input Styling */
+    .modern-input {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #e3e6f0;
+        transition: all 0.3s ease;
+    }
+
+    .modern-input:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.15rem rgba(78, 115, 223, 0.25);
+    }
+
+    textarea.modern-input {
+        resize: none;
+    }
+
+    .stat-card {
+        border-radius: 15px;
+        padding: 30px;
+        background: white;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+</style>
 
 {% endblock %}

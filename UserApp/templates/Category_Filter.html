@@ -1,177 +1,498 @@
-<!DOCTYPE html>
 {% extends 'Home.html' %}
 {% load static %}
 {% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Turfo - Explore</title>
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/allturf.css' %}">
-</head>
 
-<body>
-
-<!-- CAROUSEL BANNER -->
-<section class="carousel">
-    <div class="carousel-container">
-
-        <div class="slide active">
-            <img src="https://media.istockphoto.com/id/1403780865/photo/football-field-at-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=9ti_0r0CnjTeRXt_u7oTufSq4WaxydaeahAo0AQhwnI=">
-            <div class="caption">
-                <h1>Book Premium Football Turfs</h1>
-                <p>Play under floodlights</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <img src="https://plus.unsplash.com/premium_photo-1733288427325-f43bc7f0e758?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njl8fHR1cmZ8ZW58MHx8MHx8fDA%3D">
-            <div class="caption">
-                <h1>Box Cricket Arenas</h1>
-                <p>Perfect for weekend matches</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <img src="https://img3.khelomore.com/venues/127/images/1040x490/Pitch-3.jpg">
-            <div class="caption">
-                <h1>Indoor Badminton Courts</h1>
-                <p>Premium wooden flooring</p>
-            </div>
-        </div>
-
-        <!-- Controls -->
-        <button class="prev" onclick="changeSlide(-1)">❮</button>
-        <button class="next" onclick="changeSlide(1)">❯</button>
-
+<!-- HERO SECTION -->
+<section class="banner"
+        style="background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)),
+        url('https://media.istockphoto.com/id/1403780865/photo/football-field-at-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=9ti_0r0CnjTeRXt_u7oTufSq4WaxydaeahAo0AQhwnI=') center/cover no-repeat;">
+    <div class="banner-container">
+        {% if request.session.selected_city %}
+        <h1>Explore Turfs in {{request.session.selected_city}}</h1>
+         {% else %}
+        <h1>Explore Turfs</h1>
+        {% endif %}
+        <p>Book premium sports turfs with ease</p>
+        <a href="{% url 'all_turf' %}">
+            <button class="hero-btn">View All Turfs</button>
+        </a>
     </div>
 </section>
-<section class="movies-layout">
 
-    <!-- LEFT FILTER PANEL -->
-    <div class="filter-panel">
-        <h2>Filters</h2>
-
-        <div class="filter-box">
-            <div class="filter-header">
-                <span>Languages</span>
-                <a href="#">Clear</a>
+<!-- REDESIGNED CATEGORY SECTION -->
+<section class="section">
+    <div class="category-wrapper">
+        <h2 class="category-title">Popular Categories</h2>
+        <div class="category-pills">
+            {% for i in category %}
+            <a href="{% url 'category_filter' cat_name=i.Sport_name %}">
+                <div class="category-pill">
+                <span class="category-name">{{i.Sport_name}}</span>
             </div>
-
-            <div class="filter-options">
-                <button>English</button>
-                <button>Malayalam</button>
-                <button>Hindi</button>
-                <button>Tamil</button>
-            </div>
+            </a>
+            {% endfor %}
         </div>
+    </div>
+</section>
 
-<!--        <div class="filter-box">-->
-<!--            <div class="filter-header">-->
-<!--                <span>Genres</span>-->
-<!--                <a href="#">Clear</a>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="filter-box">-->
-<!--            <div class="filter-header">-->
-<!--                <span>Format</span>-->
-<!--                <a href="#">Clear</a>-->
-<!--            </div>-->
-<!--        </div>-->
-
-        <button class="browse-btn">Browse by Turfs</button>
+<!-- TURF GRID WITH 4 CARDS PER ROW -->
+<section class="section light-bg">
+    <div class="section-header">
+        <h2 class="section-title">Featured Turfs</h2>
+        {% if request.session.selected_city %}
+        <p class="section-subtitle">Book the best turfs in {{request.session.selected_city}} at best prices</p>
+        {% else %}
+        <p class="section-subtitle">Book the best turfs at best prices</p>
+        {% endif %}
     </div>
 
-
-    <!-- RIGHT CONTENT -->
-    <div class="content-panel">
-
-        <h2 class="page-title">Turfs in Kochi</h2>
-
-        <div class="language-pills">
-            <span>Football</span>
-            <span>Cricket</span>
-            <span>Badminton</span>
-            <span>Box Cricket</span>
-        </div>
-
-        <!-- Coming Soon Banner -->
-        <div class="coming-banner">
-            <h3>Coming Soon</h3>
-            <a href="#">Explore Upcoming Turfs →</a>
-        </div>
-
-        <!-- Cards -->
-        <div class="turf-grid">
-
-           {% for i in item %}
-        <div class="turf-card-modern">
-            <img src="{{ i.Turf_image1.url }}">
-
-            <div class="card-info">
-                <h4>{{ i.Turf_name }}</h4>
-                <p>{{ i.City }}</p>
-                <div class="rating">₹ {{ i.Price_per_hour }}/hr</div>
-
-                <a href="{% url 'single_turf' turf_id=i.id %}" class="book-btn">Book Now</a>
+    <div class="turf-grid">
+        {% for i in item %}
+        <div class="turf-card">
+            <div class="turf-image-wrapper">
+                <img src="{{ i.Turf_image1.url }}" alt="{{ i.Turf_name }}">
+                <div class="turf-category">{{ i.Category }}</div>
+                <div class="turf-price">₹{{ i.Price_per_hour }}<span>/hr</span></div>
+                {% if i.discount %}
+                <div class="turf-discount">{{ i.discount }}% OFF</div>
+                {% endif %}
+            </div>
+            <div class="turf-info">
+                <h4 class="turf-name">{{ i.Turf_name }}</h4>
+                <div class="turf-location">
+                    <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span>{{ i.City }}</span>
+                </div>
+                <div class="turf-amenities">
+                    <span class="amenity">🏟️ Floodlights</span>
+                    <span class="amenity">🅿️ Parking</span>
+                    <span class="amenity">🚿 Changing Room</span>
+                </div>
+                <a href="{% url 'single_turf' turf_id=i.id %}" class="cta-btn">
+                    Book Now
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
             </div>
         </div>
         {% endfor %}
-
-        </div>
     </div>
 
+    <div class="view-all-container">
+        <a href="{% url 'all_turf' %}" class="view-all-btn">
+            View All Turfs
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
 </section>
 
 <style>
-    .book-btn {
+/* Category Section - Redesigned */
+.category-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.category-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+    position: relative;
     display: inline-block;
-    margin-top: 12px;
-    padding: 10px 18px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #fff;
-    background: linear-gradient(135deg, #00c853, #009624);
-    border-radius: 8px;
+}
+
+.category-title:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #e11d48, #f43f5e);
+    border-radius: 2px;
+}
+
+.category-pills {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 30px 0 20px;
+}
+
+.category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 200, 83, 0.3);
+    border: 1px solid rgba(225, 29, 72, 0.1);
 }
 
-.book-btn:hover {
-    background: linear-gradient(135deg, #009624, #00c853);
+.category-pill:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(225, 29, 72, 0.15);
+    border-color: #e11d48;
+    background: linear-gradient(135deg, #fff, #fff1f3);
+}
+
+.category-pill.active {
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    border-color: #e11d48;
+}
+
+.category-pill.active .category-name,
+.category-pill.active .category-icon,
+.category-pill.active .category-count {
+    color: white;
+}
+
+.category-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.category-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.category-count {
+    background: rgba(225, 29, 72, 0.1);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #e11d48;
+}
+
+.category-pill.active .category-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Section Header */
+.section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* Turf Grid - 4 Cards per row */
+.turf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Enhanced Turf Card */
+.turf-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.turf-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15);
+}
+
+/* Larger Image Wrapper */
+.turf-image-wrapper {
+    position: relative;
+    height: 240px; /* Increased from 220px */
+    overflow: hidden;
+}
+
+.turf-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.turf-card:hover .turf-image-wrapper img {
+    transform: scale(1.1);
+}
+
+/* Category Badge */
+.turf-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+    z-index: 2;
+}
+
+/* Price Tag */
+.turf-price {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.turf-price span {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-left: 2px;
+}
+
+/* Discount Badge - Optional */
+.turf-discount {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Turf Info */
+.turf-info {
+    padding: 18px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.turf-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Location */
+.turf-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.location-icon {
+    width: 14px;
+    height: 14px;
+    stroke: #64748b;
+}
+
+/* Amenities */
+.turf-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 5px 0;
+}
+
+.amenity {
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 11px;
+    color: #475569;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* CTA Button */
+.cta-btn {
+    margin-top: auto;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.cta-btn:hover {
+    background: linear-gradient(135deg, #be123c, #9f1239);
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 200, 83, 0.5);
+    box-shadow: 0 8px 15px rgba(225, 29, 72, 0.3);
 }
 
-.book-btn:active {
-    transform: scale(0.98);
+.btn-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.cta-btn:hover .btn-icon {
+    transform: translateX(5px);
+}
+
+/* View All Button */
+.view-all-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    background: transparent;
+    color: #e11d48;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    border: 2px solid #e11d48;
+}
+
+.view-all-btn:hover {
+    background: #e11d48;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(225, 29, 72, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .turf-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .turf-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .turf-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-pills {
+        gap: 10px;
+    }
+
+    .category-pill {
+        padding: 8px 16px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+}
+
+/* Hero Section - Keeping your original style */
+.banner {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.banner-container h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.banner-container p {
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+.hero-btn {
+    padding: 14px 35px;
+    background: #e11d48;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hero-btn:hover {
+    background: #be123c;
+    transform: translateY(-2px);
 }
 </style>
-<script>
-let currentSlide = 0;
-const slides = document.querySelectorAll(".slide");
 
-function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove("active"));
-    slides[index].classList.add("active");
-}
-
-function changeSlide(direction) {
-    currentSlide += direction;
-    if (currentSlide < 0) currentSlide = slides.length - 1;
-    if (currentSlide >= slides.length) currentSlide = 0;
-    showSlide(currentSlide);
-}
-
-// Auto Slide
-setInterval(() => {
-    changeSlide(1);
-}, 4000);
-</script>
-
-
-</body>
-</html>
 {% endblock %}

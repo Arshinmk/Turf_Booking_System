@@ -1,0 +1,192 @@
+{% extends 'Owner_Dash.html' %}
+{% block content %}
+
+<!-- Page Header -->
+<div class="dashboard-header d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="mb-0">Offline Booking</h4>
+        <small class="text-muted">{{ turf.Turf_name }}</small>
+    </div>
+</div>
+
+<div class="stat-card mt-4">
+
+    <!-- Date Selector -->
+    <h5 class="mb-3">Select Date</h5>
+
+    <div class="dates-container mb-4">
+        {% for d in dates %}
+            <div class="date-card
+                {% if selected_date == d|date:"Y-m-d" %}active{% endif %}"
+                onclick="selectDate('{{ d|date:"Y-m-d" }}')">
+
+                <div class="date-day">{{ d|date:"D" }}</div>
+                <div class="date-number">{{ d|date:"d" }}</div>
+                <div class="date-month">{{ d|date:"M" }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST" action="{% url 'save_offline_booking' %}">
+        {% csrf_token %}
+
+        <input type="hidden" name="turf_id" value="{{ turf.id }}">
+        <input type="hidden" name="booking_date" id="selected-date" value="{{ selected_date }}">
+        <input type="hidden" name="slot" id="selected-slot">
+
+        <!-- Customer Name -->
+        <div class="mb-4">
+            <label class="form-label fw-semibold">Customer Name</label>
+            <input type="text"
+                   name="customer_name"
+                   class="form-control modern-input"
+                   placeholder="Enter customer name"
+                   required>
+        </div>
+
+        <!-- Slots -->
+        <h5 class="mb-3">Available Slots</h5>
+
+        <div class="slots-container mb-4">
+            {% for s in slots %}
+                {% if s in booked_slots %}
+                    <div class="slot disabled">
+                        {{ s }}
+                        <small>Booked</small>
+                    </div>
+                {% else %}
+                    <div class="slot"
+                         onclick="selectSlot(this, '{{ s }}')">
+                        {{ s }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Submit -->
+        <div class="text-end">
+            <button type="submit"
+                    class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-check-circle me-2"></i>
+                Save Offline Booking
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<style>
+/* Card */
+.stat-card {
+    border-radius: 15px;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* Modern Input */
+.modern-input {
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #e3e6f0;
+    transition: 0.3s;
+}
+
+.modern-input:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.15rem rgba(78,115,223,0.25);
+}
+
+/* Dates */
+.dates-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+}
+
+.date-card {
+    min-width: 90px;
+    padding: 15px;
+    text-align: center;
+    border-radius: 12px;
+    background: #f8f9fc;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.date-card:hover {
+    transform: translateY(-5px);
+    background: #e9ecfb;
+}
+
+.date-card.active {
+    background: #4e73df;
+    color: white;
+    border-color: #4e73df;
+}
+
+.date-number {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.date-day,
+.date-month {
+    font-size: 13px;
+}
+
+/* Slots */
+.slots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.slot {
+    padding: 12px;
+    text-align: center;
+    border-radius: 10px;
+    background: #f8f9fc;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.slot:hover {
+    background: #e2e6f9;
+    transform: translateY(-3px);
+}
+
+.slot.active {
+    background: #1cc88a;
+    color: white;
+    border-color: #1cc88a;
+}
+
+.slot.disabled {
+    background: #f8d7da;
+    color: #842029;
+    cursor: not-allowed;
+    font-size: 14px;
+}
+</style>
+
+<script>
+function selectDate(dateValue){
+    const url = new URL(window.location.href);
+    url.searchParams.set('date', dateValue);
+    window.location.href = url.toString();
+}
+
+function selectSlot(element, slotValue){
+    document.querySelectorAll(".slot").forEach(s => {
+        s.classList.remove("active");
+    });
+    element.classList.add("active");
+    document.getElementById("selected-slot").value = slotValue;
+}
+</script>
+
+{% endblock %}

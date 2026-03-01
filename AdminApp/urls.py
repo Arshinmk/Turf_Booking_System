@@ -23,4 +23,12 @@ urlpatterns=[
     path('edit_city/<int:city_id>/',views.edit_city,name="edit_city"),
     path('update_city/<int:c_id>/',views.update_city,name="update_city"),
     path('city_delete/<int:city_id>/',views.city_delete,name="city_delete"),
+#-----------------------------------------------------------------------------------------------------------------------
+    path('message_details/', views.message_details, name="message_details"),
+    path('message_delete/<int:msg_id>/', views.message_delete, name="message_delete"),
+#-----------------------------------------------------------------------------------------------------------------------
+    path('request_for_owner/', views.request_for_owner, name="request_for_owner"),
+    path('request_delete/<int:onr_id>/', views.request_delete, name="request_delete"),
+    path('make_owner/<int:onr_id>/', views.make_owner, name="make_owner"),
+
 ]

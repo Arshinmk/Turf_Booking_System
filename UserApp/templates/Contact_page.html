@@ -1,0 +1,327 @@
+{% extends 'Home.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="banner"
+        style="background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.5)),
+        url('{% static "images/home2.png" %}') center/cover no-repeat;">
+    <div class="banner-container">
+        <h1>Let’s Talk</h1>
+        <p>We’re here to help you with bookings, partnerships, and support.</p>
+        <a href="#contact-form">
+            <button class="hero-btn">Send a Message</button>
+        </a>
+    </div>
+</section>
+
+<!-- CONTACT INFO CARDS -->
+<section class="section light-bg">
+    <div class="contact-cards">
+
+        <div class="contact-card">
+            <h3>📍 Visit Us</h3>
+            <p>Turfo Headquarters</p>
+            <p>Kannur, Kerala, India</p>
+        </div>
+
+        <div class="contact-card">
+            <h3>📞 Call Us</h3>
+            <p>+91 96450 3845</p>
+            <p>Mon - Sat (9 AM - 8 PM)</p>
+        </div>
+
+        <div class="contact-card">
+            <h3>📧 Email Us</h3>
+            <p>support@turfo.com</p>
+            <p>partnerships@turfo.com</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- MAIN CONTACT SECTION -->
+<section class="section" id="contact-form">
+    <div class="contact-container">
+
+        <!-- LEFT SIDE -->
+        <div class="contact-left">
+            <h2>Get in Touch With Turfo</h2>
+            <p>
+                Whether you’re a player looking for assistance, or a turf owner
+                interested in listing your facility, our team is ready to assist you.
+                Fill out the form and we’ll respond within 24 hours.
+            </p>
+
+            <ul class="contact-points">
+                <li>✔ Fast Response</li>
+                <li>✔ Dedicated Support Team</li>
+                <li>✔ Secure & Confidential Communication</li>
+                <li>✔ Business & Partnership Inquiries Welcome</li>
+            </ul>
+        </div>
+
+        <!-- RIGHT SIDE FORM -->
+        <div class="contact-form-box">
+            <form method="POST" action="{% url 'save_contact' %}">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <input type="text" value="{{request.session.username}}" name="name" placeholder="Full Name" required>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="form-row">
+                    <input type="text" name="phone" placeholder="Phone Number">
+                    <input type="text" name="subject" placeholder="Subject" required>
+                </div>
+
+                <div class="form-group">
+                    <textarea name="message" rows="6" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                {% if request.session.username %}
+                    <button type="submit" class="contact-btn">Submit Message</button>
+                {% else %}
+                    <a href="{% url 'user_signup' %}" class="contact-btn login-link">
+                        Login to Submit
+                    </a>
+                {% endif %}
+            </form>
+        </div>
+
+    </div>
+</section>
+
+<!-- TURF OWNER CTA SECTION -->
+<section class="section cta-turf-owner">
+    <div class="cta-turf-container">
+        <h2>Are you a Turf Owner?</h2>
+        <p>List your turf on Turfo and get discovered by thousands of sports enthusiasts.</p>
+        <a href="{% url 'help' %}">
+            <button class="cta-btn">Become a Turf Owner</button>
+        </a>
+    </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="section light-bg">
+    <div class="faq-container">
+        <h2 class="center">Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <h4>How do I book a turf?</h4>
+            <p>Select your city, choose a turf, pick your preferred slot, and confirm booking online.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Can turf owners list their facility on Turfo?</h4>
+            <p>Yes! Contact us through this page and our team will guide you through the onboarding process.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Is online payment secure?</h4>
+            <p>Absolutely. We use secure payment gateways to ensure safe transactions.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="section cta-section">
+    <h2>Ready to Play?</h2>
+    <p>Discover premium sports turfs near you and book instantly.</p>
+    <a href="{% url 'all_turf' %}">
+        <button class="cta-btn">Explore Turfs</button>
+    </a>
+</section>
+
+<!-- STYLES -->
+<style>
+/* Light Background */
+.light-bg {
+    background: #f9fafb;
+}
+
+/* Contact Cards */
+.contact-cards {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.contact-card {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.contact-card:hover {
+    transform: translateY(-6px);
+}
+
+/* Main Contact Layout */
+.contact-container {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+}
+
+.contact-left h2 {
+    color: #e11d48;
+    margin-bottom: 15px;
+}
+
+.contact-left p {
+    line-height: 1.7;
+    color: #444;
+}
+
+.contact-points {
+    margin-top: 20px;
+    line-height: 2;
+    color: #444;
+}
+
+/* Form Box */
+.contact-form-box {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row input {
+    flex: 1;
+}
+
+.form-group textarea,
+.form-row input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group textarea:focus,
+.form-row input:focus {
+    border-color: #e11d48;
+    box-shadow: 0 0 6px rgba(225,29,72,0.2);
+}
+
+.contact-btn {
+    background: #e11d48;
+    color: white;
+    padding: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.contact-btn:hover {
+    background: #be123c;
+}
+
+/* TURF OWNER CTA */
+.cta-turf-owner {
+    background: #fef2f2;
+    padding: 50px 20px;
+    text-align: center;
+    margin: 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-turf-owner:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+.cta-turf-owner h2 {
+    font-size: 28px;
+    color: #b91c1c;
+    margin-bottom: 15px;
+}
+
+.cta-turf-owner p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.cta-turf-owner .cta-btn {
+    background: #e11d48;
+    color: white;
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.cta-turf-owner .cta-btn:hover {
+    background: #be123c;
+}
+
+/* FAQ */
+.faq-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.faq-item {
+    margin-top: 20px;
+}
+
+.faq-item h4 {
+    color: #e11d48;
+}
+
+/* CTA */
+.cta-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.cta-btn, .hero-btn {
+    background: #e11d48;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cta-btn:hover, .hero-btn:hover {
+    background: #be123c;
+}
+
+.center {
+    text-align: center;
+}
+.login-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+</style>
+
+{% endblock %}

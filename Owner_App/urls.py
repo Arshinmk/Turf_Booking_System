@@ -11,4 +11,8 @@ urlpatterns=[
     path('delete_turf/<int:turf_id>/',views.delete_turf,name="delete_turf"),
     path('update_turf/<int:t_id>/',views.update_turf,name="update_turf"),
 #-----------------------------------------------------------------------------------------------------------------------
+    path('offline_booking/<int:book_id>/',views.offline_booking,name="offline_booking"),
+    path('save_offline_booking/',views.save_offline_booking,name="save_offline_booking"),
+    path('booked_details/',views.booked_details,name="booked_details"),
+    path('delete_bookings/<int:bk_id>/',views.delete_bookings,name="delete_bookings"),
 ]
