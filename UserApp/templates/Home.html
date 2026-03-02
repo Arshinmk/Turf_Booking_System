@@ -47,13 +47,14 @@
 <!-- CATEGORY NAV -->
 <nav class="category-nav">
     <div class="nav-container">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'about' %}">About</a>
-        <a href="{% url 'all_turf' %}">Turfs</a>
-        <a href="{% url 'contact' %}">Contact</a>
-        <a href="{% url 'help' %}">Help</a>
+        <a href="{% url 'home' %}" class="{% if active_page == 'home' %}active{% endif %}">
+            Home</a>
+        <a href="{% url 'about' %}" class="{% if active_page == 'about' %}active{% endif %}">About</a>
+        <a href="{% url 'all_turf' %}" class="{% if active_page == 'all_turf' %}active{% endif %}">Turfs</a>
+        <a href="{% url 'contact' %}" class="{% if active_page == 'contact' %}active{% endif %}">Contact</a>
+        <a href="{% url 'help' %}" class="{% if active_page == 'help' %}active{% endif %}">Help</a>
         {% if request.session.username %}
-        <a href="{% url 'user_booking' %}">Bookings</a>
+        <a href="{% url 'user_booking' %}" class="{% if active_page == 'booking' %}active{% endif %}">Bookings</a>
         {% endif %}
     </div>
 </nav>
@@ -84,7 +85,6 @@
             <h3>{{i.Sport_name}}</h3>
             <a href="{% url 'category_filter' cat_name=i.Sport_name %}">View Turf</a>
         </div>
-
         {% endfor %}
     </div>
 </section>
@@ -92,40 +92,35 @@
 <!-- TURFS -->
 <section class="section">
     <div class="section-header">
-        <h2>Recommended Turfs</h2>
-        <a href="#">See All</a>
+        <h2>Latest Turfs</h2>
+        <a href="{% url 'all_turf' %}">See All</a>
     </div>
 
     <div class="card-row">
+        {% for turf in item %}
         <div class="turf-card">
-            <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d">
-            <h3>Elite Football Arena</h3>
-            <p>📍 Bangalore</p>
-            <span>₹1500 / hr</span>
-        </div>
 
-        <div class="turf-card">
-            <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2">
-            <h3>GreenPlay Turf</h3>
-            <p>📍 Chennai</p>
-            <span>₹1200 / hr</span>
-        </div>
+            <img src="{{ turf.Turf_image1.url }}" alt="{{ turf.Turf_name }}">
 
-        <div class="turf-card">
-            <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1">
-            <h3>Urban Sports Hub</h3>
-            <p>📍 Hyderabad</p>
-            <span>₹1000 / hr</span>
-        </div>
+            <div class="turf-content">
+                <h3>{{ turf.Turf_name }}</h3>
 
-        <div class="turf-card">
-            <img src="https://images.unsplash.com/photo-1551958219-acbc608c6377">
-            <h3>Pro Box Cricket</h3>
-            <p>📍 Mumbai</p>
-            <span>₹900 / hr</span>
+                <p>🏟 {{ turf.Sport }}</p>
+
+                <p>📍 {{ turf.City }}</p>
+
+                <span>₹{{ turf.Price_per_hour }} / hr</span>
+
+                <a href="{% url 'single_turf' turf_id=turf.id %}" class="view-btn">
+                    View Turf
+                </a>
+            </div>
+
         </div>
+        {% endfor %}
     </div>
 </section>
+
 {% endblock %}
 <!-- FOOTER -->
 <footer class="main-footer">
@@ -239,6 +234,83 @@
     border-radius: 6px;
     border: 1px solid #ccc;
     width: 300px;
+}
+
+/* TURF CARD FIXED HEIGHT */
+.turf-card {
+    width: 240px;
+    height: 420px;   /* fixed full card height */
+    flex: 0 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+/* FIXED IMAGE HEIGHT */
+.turf-card img {
+    width: 100%;
+    height: 200px;   /* same height for all images */
+    object-fit: cover;
+}
+
+/* CONTENT AREA */
+.turf-content {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;   /* take remaining height */
+}
+
+/* SPORT + CITY TEXT */
+.turf-content p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* PRICE */
+.turf-content span {
+    margin-top: auto;   /* pushes button to bottom */
+    font-weight: bold;
+    color: #e11d48;
+    margin-bottom: 10px;
+}
+
+/* BUTTON */
+.view-btn {
+    text-align: center;
+    padding: 8px;
+    background: #e11d48;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.view-btn:hover {
+    background: #be123c;
+}
+
+
+    .category-nav a.active {
+    color: #e11d48;
+    font-weight: 700;
+    position: relative;
+}
+
+.category-nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 4px;
+    background: linear-gradient(90deg, #e11d48, #f43f5e);
+    border-radius: 10px;
 }
 </style>
 

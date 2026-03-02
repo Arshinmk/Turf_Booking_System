@@ -27,6 +27,10 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'login/css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'login/css/main.css' %}">
+
+
+	<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <!--===============================================================================================-->
 </head>
 <body>
@@ -80,6 +84,34 @@
 	<script src="{% static 'login/vendor/countdowntime/countdowntime.js' %}"></script>
 <!--===============================================================================================-->
 	<script src="{% static 'login/js/main.js' %}"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+{% if messages %}
+<script>
+{% for message in messages %}
+Swal.fire({
+  title: "{{ message }}",
+  icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+  showClass: {
+    popup: `
+      animate__animated
+      animate__fadeInUp
+      animate__faster
+    `
+  },
+  hideClass: {
+    popup: `
+      animate__animated
+      animate__fadeOutDown
+      animate__faster
+    `
+  }
+});
+{% endfor %}
+</script>
+{% endif %}
 
 </body>
 </html>

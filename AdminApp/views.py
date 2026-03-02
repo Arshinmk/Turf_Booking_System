@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from AdminApp.models import *
 from UserApp.models import *
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.core.files.storage import FileSystemStorage
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib import messages
@@ -24,11 +24,18 @@ def admin_login(request):
         if item is not None:
             if item.role == "admin" or item.is_superuser:
                 login(request,item)
+                messages.success(request, "Login Successful!")
                 return redirect(dashboard)
             else:
+                messages.error(request, "You are not authorized as Admin!")
                 return redirect(admin_loginpage)
         else:
+            messages.error(request, "Invalid Username or Password!")
             return redirect(admin_loginpage)
+
+def admin_logout(request):
+    logout(request)
+    return redirect(admin_loginpage)
 
 @admin_required
 def dashboard(request):

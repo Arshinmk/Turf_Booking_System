@@ -31,7 +31,8 @@
         <td><img src="{{i.Sport_img2.url}}"></td>
         <td class="actions">
           <a href="{% url 'edit_category' cat_id=i.id %}"><button class="btn-edit">Edit</button></a>
-          <a href="{% url 'delete_category' cat_id=i.id %}"><button class="btn-delete">Delete</button></a>
+          <a href="{% url 'delete_category' cat_id=i.id %}"><button
+                  onclick="return confirm('Do You Want To Delete This Category?');" class="btn-delete">Delete</button></a>
         </td>
       </tr>
     {% endfor %}

@@ -31,7 +31,8 @@
 <!--        <td>{{i.password}}</td>-->
         <td class="actions">
           <a href="{% url 'edit_user' user_id=i.id %}"><button class="btn-edit">Edit</button></a>
-          <a href="#"><button class="btn-delete">Delete</button></a>
+          <a href="#"><button onclick="return confirm('Do you Want to delete this User?');"
+                              class="btn-delete">Delete</button></a>
         </td>
       </tr>
     {% endfor %}

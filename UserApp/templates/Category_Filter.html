@@ -8,7 +8,7 @@
         url('https://media.istockphoto.com/id/1403780865/photo/football-field-at-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=9ti_0r0CnjTeRXt_u7oTufSq4WaxydaeahAo0AQhwnI=') center/cover no-repeat;">
     <div class="banner-container">
         {% if request.session.selected_city %}
-        <h1>Explore Turfs in {{request.session.selected_city}}</h1>
+        <h1>Explore {{cat_name}} Turfs in {{request.session.selected_city}}</h1>
          {% else %}
         <h1>Explore Turfs</h1>
         {% endif %}
@@ -38,7 +38,7 @@
 <!-- TURF GRID WITH 4 CARDS PER ROW -->
 <section class="section light-bg">
     <div class="section-header">
-        <h2 class="section-title">Featured Turfs</h2>
+        <h2 class="section-title">{{cat_name}} Turfs</h2>
         {% if request.session.selected_city %}
         <p class="section-subtitle">Book the best turfs in {{request.session.selected_city}} at best prices</p>
         {% else %}
@@ -53,9 +53,6 @@
                 <img src="{{ i.Turf_image1.url }}" alt="{{ i.Turf_name }}">
                 <div class="turf-category">{{ i.Category }}</div>
                 <div class="turf-price">₹{{ i.Price_per_hour }}<span>/hr</span></div>
-                {% if i.discount %}
-                <div class="turf-discount">{{ i.discount }}% OFF</div>
-                {% endif %}
             </div>
             <div class="turf-info">
                 <h4 class="turf-name">{{ i.Turf_name }}</h4>

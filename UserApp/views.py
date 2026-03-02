@@ -19,11 +19,18 @@ def home(request):
     cat=CategoryDb.objects.all()
     city=CityDb.objects.all()
     turfs = TurfDb.objects.all()
+    item=TurfDb.objects.all().order_by('-id')[:5]
 
     selected_city = request.session.get('selected_city')
     if selected_city:
         turfs = turfs.filter(City=selected_city)
-    return render(request,"Home.html",{"cat":cat,"city":city,"turfs":turfs})
+    return render(request,"Home.html",{
+        "cat":cat,
+        "city":city,
+        "turfs":turfs,
+        "item":item,
+        "active_page":"home"
+    })
 #-----------------------------------------------------------------------------------------------------------------------
 def user_signup(request):
     return render(request,"User_Signup.html")
@@ -93,7 +100,7 @@ def all_turf(request):
     if selected_city:
         item = item.filter(City=selected_city)
 
-    return render(request,"All_Turf.html",{"city":city,"item":item,"category":category})
+    return render(request,"All_Turf.html",{"city":city,"item":item,"category":category,"active_page":"all_turf"})
 
 def category_filter(request,cat_name):
     city = CityDb.objects.all()
@@ -109,6 +116,7 @@ def category_filter(request,cat_name):
         "city":city,
         "selected_city":selected_city,
         "category":category,
+        "cat_name":cat_name
     })
 
 def single_turf(request,turf_id):
@@ -288,10 +296,12 @@ def payment_success(request):
             return JsonResponse({"status": "failed"})
 #-----------------------------------------------------------------------------------------------------------------------
 def about_page(request):
-    return render(request,"About_page.html")
+    city = CityDb.objects.all()
+    return render(request,"About_page.html",{"city":city,"active_page":"about"})
 
 def contact_page(request):
-    return render(request,"Contact_page.html")
+    city = CityDb.objects.all()
+    return render(request,"Contact_page.html",{"city":city,"active_page":"contact"})
 
 def save_contact(request):
     if request.method == "POST":
@@ -311,7 +321,8 @@ def save_contact(request):
         return redirect(contact_page)
 
 def help_page(request):
-    return render(request,"Help_page.html")
+    city = CityDb.objects.all()
+    return render(request,"Help_page.html",{"city":city,"active_page":"help"})
 
 def save_owner_application(request):
     if request.method == "POST":
@@ -339,6 +350,6 @@ def user_booking(request):
     username=request.session['username']
     user = User.objects.get(username=username)
     item=BookingDb.objects.filter(user=user).order_by('-booking_date')
-    return render(request,"Bookings.html",{"item":item})
+    return render(request,"Bookings.html",{"item":item,"active_page":"booking"})
 
 

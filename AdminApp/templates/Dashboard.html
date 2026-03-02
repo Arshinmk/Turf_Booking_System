@@ -69,9 +69,8 @@
             </div>
             </a>
           </li>
-
-          <li class="menu-item">Notifications</li>
-          <li class="menu-item">Support</li>
+<!--          <li class="menu-item">Notifications</li>-->
+<!--          <li class="menu-item">Support</li>-->
         </ul>
       </nav>
     </aside>
@@ -89,13 +88,11 @@
     <!-- New Project Dropdown -->
     <div class="btn-dropdown">
       <button class="btn dropdown-btn">
-        + New Project <span class="arrow">▾</span>
+        Welcome {{request.user.username}}<span class="arrow">▾</span>
       </button>
 
       <div class="btn-dropdown-menu">
-        <a href="#">New Report</a>
-        <a href="#">New Category</a>
-        <a href="#">New User</a>
+        <a href="{% url 'admin_logout' %}">Logout</a>
       </div>
     </div>
 
@@ -206,6 +203,7 @@
   background: linear-gradient(135deg, #e0f2fe, #ccfbf1);
   color: #022c22;
   box-shadow: 0 10px 30px rgba(16,185,129,0.25);
+  text-decoration:none
 }
 
 /* Dropdown Wrapper */
